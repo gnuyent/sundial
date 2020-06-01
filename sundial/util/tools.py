@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 def flatten(arr):
     for x in arr:
-        if hasattr(x, '__iter__') and not isinstance(x, str):
+        if hasattr(x, "__iter__") and not isinstance(x, str):
             for y in flatten(x):
                 yield y
         else:
@@ -65,4 +65,6 @@ def time_sorter(courses, start=False):
 def average_time(dates):
     dates = [datetime(2020, 1, 1, time.hour, time.minute) for time in dates]
     reference_date = datetime(1900, 1, 1)
-    return reference_date + sum([date - reference_date for date in dates], timedelta()) / len(dates)
+    return reference_date + sum(
+        [date - reference_date for date in dates], timedelta()
+    ) / len(dates)

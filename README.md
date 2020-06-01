@@ -81,17 +81,6 @@ able to generate a schedule for any course list and time period available on the
 sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant 
 information (logs, screenshots, etc) as possible.
 
-## TODO
-* Refactor and clean code
-* Implement more parameters
-    * waitlist
-    * force include certain classes
-* Integration Testing
-* Implement SQLAlchemy in algorithm
-* JS front-end with back-end REST API access
-    * RateMyProfessor view
-* Docker container
-
 ## Contributing
 sundial is licensed under the MIT license. Pull requests are welcome.
 

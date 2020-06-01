@@ -9,7 +9,7 @@ class Course:
         self.course = course
         self.days = days
         self.time_string = time_range
-        hours = time_range.split('-')
+        hours = time_range.split("-")
         self.hour_start = time(int(hours[0][:2]), int(hours[0][2:]))
         self.hour_end = time(int(hours[1][:2]), int(hours[1][2:]))
         self.time_range = [self.hour_start, self.hour_end]
@@ -25,13 +25,20 @@ class Course:
 
     def __repr__(self):
         zero_time = time()
-        comparison_time = time(10)
-        start_time_string = str(self.hour_start.isoformat(timespec='minutes'))
-        end_time_string = str(self.hour_end.isoformat(timespec='minutes'))
+        start_time_string = str(self.hour_start.isoformat(timespec="minutes"))
+        end_time_string = str(self.hour_end.isoformat(timespec="minutes"))
         if self.hour_start == zero_time and self.hour_end == zero_time:
             return str(self.course) + " NO_TIME"
         else:
-            return str(self.course) + " " + self.days + " " + start_time_string + "-" + end_time_string
+            return (
+                str(self.course)
+                + " "
+                + self.days
+                + " "
+                + start_time_string
+                + "-"
+                + end_time_string
+            )
 
 
 class Schedule:
@@ -47,11 +54,13 @@ class Schedule:
         self.fitness = 0
 
     def overlaps(self):
-        week = [[],  # Monday
-                [],  # Tuesday
-                [],  # Wednesday
-                [],  # Thursday
-                []]  # Friday
+        week = [
+            [],  # Monday
+            [],  # Tuesday
+            [],  # Wednesday
+            [],  # Thursday
+            [],  # Friday
+        ]
         for course in self.courses:
             days = day_separator(course.days)
             while len(days) > 0:
@@ -89,10 +98,13 @@ class Schedule:
         self.courses.append(course)
 
     def calculate_fitness(self, schedule_parameters):
-        self.around_time(schedule_parameters['around_time'], schedule_parameters['maximum_time_distance'])
-        self.bad_day((schedule_parameters['bad_day']))
-        self.earliest_time(schedule_parameters['earliest_time'])
-        self.latest_time(schedule_parameters['latest_time'])
+        self.around_time(
+            schedule_parameters["around_time"],
+            schedule_parameters["maximum_time_distance"],
+        )
+        self.bad_day((schedule_parameters["bad_day"]))
+        self.earliest_time(schedule_parameters["earliest_time"])
+        self.latest_time(schedule_parameters["latest_time"])
 
     def around_time(self, comparison_time, time_distance):
         start_time = time_sorter(self.courses, start=True)[0]
@@ -101,13 +113,17 @@ class Schedule:
 
         if len(self.courses) > 2:
             for course in self.courses[1:-1]:
-                start = datetime(2020, 1, 1, course.hour_start.hour, course.hour_start.minute)
+                start = datetime(
+                    2020, 1, 1, course.hour_start.hour, course.hour_start.minute
+                )
                 end = datetime(2020, 1, 1, course.hour_end.hour, course.hour_end.minute)
-                midpoint = (start + (end - start)/2).time()
+                midpoint = (start + (end - start) / 2).time()
                 average_times.append(midpoint)
 
         average = average_time(average_times)
-        comparison_time = datetime(2020, 1, 1, comparison_time.hour, comparison_time.minute)
+        comparison_time = datetime(
+            2020, 1, 1, comparison_time.hour, comparison_time.minute
+        )
         distance = abs((comparison_time - average).total_seconds())
 
         time_distance = (time_distance.hour * 60 * 60) + (time_distance.minute * 60)
@@ -119,8 +135,12 @@ class Schedule:
     def bad_day(self, days):
         days = day_separator(days)
         course_days = []
-        [course_days.append(day_separator(course.days)) for course in self.courses]  # Get array of days for all courses
-        course_days = [day for day_array in course_days for day in day_array]  # Flatten list
+        [
+            course_days.append(day_separator(course.days)) for course in self.courses
+        ]  # Get array of days for all courses
+        course_days = [
+            day for day_array in course_days for day in day_array
+        ]  # Flatten list
         for day in days:
             for course_day in course_days:
                 if day == course_day:  # if unliked day matches a course schedule day
