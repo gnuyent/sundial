@@ -1,15 +1,17 @@
 import itertools
 import os
-from sundial.util.structures import Course, Schedule
-from sundial.util.tools import identical_overlap, contains_duplicates
 import sqlite3
+from typing import Dict
+
+from core.backend.util.structures import Course, Schedule
+from core.backend.util.tools import identical_overlap, contains_duplicates
 
 
 # Abstracted controller for interacting with schedules
 
 
 class ScheduleController:
-    def __init__(self, schedule_parameters, *args):
+    def __init__(self, schedule_parameters: Dict, *args: str):
         self.schedules = []  # all possible schedules
         self.course_list = []  # courses requested
         self.simulations = 0
@@ -67,15 +69,12 @@ class ScheduleController:
 
     def iterate(self):
         [
-            schedule.reset_fitness() for schedule in self.schedules
-        ]  # reset fitness levels
-        [
             schedule.calculate_fitness(self.schedule_parameters)
             for schedule in self.schedules
         ]
         self.schedules.sort(key=lambda x: x.fitness, reverse=True)
 
-    def best_schedule(self):
+    def best_schedule(self) -> Schedule:
         return self.schedules[0]
 
     def __str__(self):

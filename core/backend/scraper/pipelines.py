@@ -7,7 +7,13 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from scraper.models import Course, Footnote, Meeting, db_connect, create_table
+from core.backend.scraper.models import (
+    Course,
+    Footnote,
+    Meeting,
+    db_connect,
+    create_table,
+)
 
 
 class ScraperDatabasePipeline(object):

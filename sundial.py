@@ -1,5 +1,5 @@
 from datetime import time
-from sundial.util.controllers import ScheduleController
+from core.backend.util.controllers import ScheduleController
 
 # Schedule parameters to generate fitness scores on. No parameter is firm and will not immediately dismiss a schedule
 # because it does not fit in a certain parameter.

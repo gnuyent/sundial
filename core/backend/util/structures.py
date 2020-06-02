@@ -1,10 +1,12 @@
 # Data containers
-from sundial.util.tools import average_time, day_separator, time_sorter
 from datetime import datetime, time
+from typing import Dict, Tuple
+
+from core.backend.util.tools import average_time, day_separator, time_sorter
 
 
 class Course:
-    def __init__(self, id, course, days, time_range):
+    def __init__(self, id: str, course: str, days: str, time_range: str):
         self.id = id
         self.course = course
         self.days = days
@@ -25,20 +27,12 @@ class Course:
 
     def __repr__(self):
         zero_time = time()
-        start_time_string = str(self.hour_start.isoformat(timespec="minutes"))
-        end_time_string = str(self.hour_end.isoformat(timespec="minutes"))
+        start_time = str(self.hour_start.isoformat(timespec="minutes"))
+        end_time = str(self.hour_end.isoformat(timespec="minutes"))
         if self.hour_start == zero_time and self.hour_end == zero_time:
-            return str(self.course) + " NO_TIME"
+            return f"{self.course} NO_TIME"
         else:
-            return (
-                str(self.course)
-                + " "
-                + self.days
-                + " "
-                + start_time_string
-                + "-"
-                + end_time_string
-            )
+            return f"{self.course} {self.days} {start_time}-{end_time}"
 
 
 class Schedule:
@@ -50,10 +44,7 @@ class Schedule:
             raise
         self.fitness = 0
 
-    def reset_fitness(self):
-        self.fitness = 0
-
-    def overlaps(self):
+    def overlaps(self) -> bool:
         week = [
             [],  # Monday
             [],  # Tuesday
@@ -85,19 +76,13 @@ class Schedule:
             for course_index in range(1, len(day)):
                 start_time = day[course_index].hour_start
                 end_time = day[course_index - 1].hour_end
-                if end_time > start_time:
+                if end_time >= start_time:
                     return True
 
         return False
 
-    """
-    Adds a course to the schedule
-    """
-
-    def add(self, course):
-        self.courses.append(course)
-
-    def calculate_fitness(self, schedule_parameters):
+    def calculate_fitness(self, schedule_parameters: Dict):
+        self.fitness = 0
         self.around_time(
             schedule_parameters["around_time"],
             schedule_parameters["maximum_time_distance"],
@@ -106,7 +91,7 @@ class Schedule:
         self.earliest_time(schedule_parameters["earliest_time"])
         self.latest_time(schedule_parameters["latest_time"])
 
-    def around_time(self, comparison_time, time_distance):
+    def around_time(self, comparison_time: time, time_distance: time):
         start_time = time_sorter(self.courses, start=True)[0]
         end_time = time_sorter(self.courses, start=False)[0]
         average_times = [start_time, end_time]
@@ -132,7 +117,7 @@ class Schedule:
         else:
             self.fitness -= 1
 
-    def bad_day(self, days):
+    def bad_day(self, days: str):
         days = day_separator(days)
         course_days = []
         [
@@ -146,7 +131,7 @@ class Schedule:
                 if day == course_day:  # if unliked day matches a course schedule day
                     self.fitness -= 1
 
-    def earliest_time(self, comparison_time):
+    def earliest_time(self, comparison_time: time):
         course_times = time_sorter(self.courses, start=True)
         for start_time in course_times:
             if start_time < comparison_time:  # start time is before specified
@@ -155,7 +140,7 @@ class Schedule:
                 break  # Terminate early so not every class is visited
 
     # Determines if current schedule passes latest time or not
-    def latest_time(self, comparison_time):
+    def latest_time(self, comparison_time: time):
         course_times = time_sorter(self.courses, start=False)
         for end_time in course_times:
             if end_time > comparison_time:  # end time is later than specified

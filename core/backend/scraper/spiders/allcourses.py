@@ -3,8 +3,8 @@ import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import Selector
 
-from scraper.items import CourseItem
-from scraper.utilities import clean, parse_footnotes, parse_meetings
+from core.backend.scraper.items import CourseItem
+from core.backend.scraper.utilities import clean, parse_footnotes, parse_meetings
 
 
 class AllCoursesSpider(scrapy.Spider):

@@ -26,4 +26,4 @@ pip-log.txt
 pip-delete-this-directory.txt
 .scrapy
 .idea/
-scraper/classes.db.bak
+core/backend/scraper/classes.db.bak

@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
+from typing import List
 
 
 # Common functions used by the controllers
@@ -14,19 +15,19 @@ def flatten(arr):
 
 
 # Checks if schedule has the same course multiple times
-def contains_duplicates(input_array):
-    nonduplicated = []
+def contains_duplicates(input_array) -> bool:
+    unique_courses = []
     for value in input_array:
-        if value in nonduplicated:
+        if value in unique_courses:
             return True
         else:
-            nonduplicated.append(value)
+            unique_courses.append(value)
 
     return False
 
 
 # Checks if the same course has overlapping times.
-def identical_overlap(focus, comparison):
+def identical_overlap(focus, comparison) -> bool:
     if focus.hour_start == comparison.hour_start and focus.days == comparison.days:
         return True
     else:
@@ -34,7 +35,7 @@ def identical_overlap(focus, comparison):
 
 
 # Get the days from a certain day string
-def day_separator(days):
+def day_separator(days: str) -> List[str]:
     if "TH" in days:
         split_days = days.partition("TH")
         split_days = list(filter(None, split_days))  # Remove empty indices
@@ -51,7 +52,7 @@ def day_separator(days):
 
 
 # Sort by start or end time
-def time_sorter(courses, start=False):
+def time_sorter(courses: List, start: bool = False) -> List[time]:
     course_times = []
     if start is False:
         [course_times.append(course.hour_end) for course in courses]
@@ -61,8 +62,8 @@ def time_sorter(courses, start=False):
     return course_times
 
 
-# Generate average time of datetime list. Returns datetime object
-def average_time(dates):
+# Generate average time of time list. Returns datetime object
+def average_time(dates: List[time]) -> datetime:
     dates = [datetime(2020, 1, 1, time.hour, time.minute) for time in dates]
     reference_date = datetime(1900, 1, 1)
     return reference_date + sum(
