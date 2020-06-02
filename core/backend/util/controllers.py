@@ -78,6 +78,18 @@ class ScheduleController:
             if not s.overlaps():
                 self.schedules.append(s)
 
+        # check for force include course option
+        if len(self.schedule_parameters["include-courses"]) > 0:
+            for schedule_number in self.schedule_parameters["include-courses"]:
+                for schedule in list(
+                    self.schedules
+                ):  # create duplicate of list to modify in place
+                    # if the specified schedule number is NOT in the schedule
+                    if not any(
+                        str(schedule_number) in course.id for course in schedule.courses
+                    ):
+                        self.schedules.remove(schedule)
+
     def iterate(self):
         [
             schedule.calculate_fitness(self.schedule_parameters)
@@ -85,8 +97,11 @@ class ScheduleController:
         ]
         self.schedules.sort(key=lambda x: x.fitness, reverse=True)
 
-    def best_schedule(self) -> Schedule:
-        return self.schedules[0]
+    def best_schedule(self) -> Schedule or None:
+        if len(self.schedules) > 0:
+            return self.schedules[0]
+        else:
+            return None
 
     def __str__(self):
         output = ""

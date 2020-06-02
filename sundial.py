@@ -18,6 +18,8 @@ schedule_parameters = {
         18
     ),  # datetime.time object in hours, minutes of latest end time (exclusive)
     "prefer-no-waitlist": True,  # Prefer non-waitlisted classes
+    "include-professors:": [],  # include certain professors
+    "include-courses": [],  # include certain courses (input schedule number)
 }
 controller = ScheduleController(
     schedule_parameters,
@@ -32,9 +34,12 @@ controller = ScheduleController(
 controller.generate_schedules()
 controller.iterate()
 best = controller.best_schedule()
-print(controller.best_schedule())
-print("Fitness: " + str(best.fitness))
-print("------ additional results ------")
-for schedule in controller.schedules[1:]:
-    print(schedule)
-    print("Fitness: " + str(schedule.fitness))
+if best is not None:
+    print(best)
+    print("Fitness: " + str(best.fitness))
+    print("------ additional results ------")
+    for schedule in controller.schedules[1:]:
+        print(schedule)
+        print("Fitness: " + str(schedule.fitness))
+else:
+    print("No schedules!")
