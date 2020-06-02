@@ -6,7 +6,9 @@ from core.backend.util.tools import average_time, day_separator, time_sorter
 
 
 class Course:
-    def __init__(self, id: str, course: str, days: str, time_range: str):
+    def __init__(
+        self, id: str, course: str, days: str, time_range: str, waitlist: bool
+    ):
         self.id = id
         self.course = course
         self.days = days
@@ -15,6 +17,7 @@ class Course:
         self.hour_start = time(int(hours[0][:2]), int(hours[0][2:]))
         self.hour_end = time(int(hours[1][:2]), int(hours[1][2:]))
         self.time_range = [self.hour_start, self.hour_end]
+        self.waitlist = waitlist
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and self.course == other.course
@@ -29,10 +32,13 @@ class Course:
         zero_time = time()
         start_time = str(self.hour_start.isoformat(timespec="minutes"))
         end_time = str(self.hour_end.isoformat(timespec="minutes"))
+        out_string = f"{self.course}"
+        if self.waitlist:
+            out_string += " (W)"
         if self.hour_start == zero_time and self.hour_end == zero_time:
-            return f"{self.course} NO_TIME"
+            return f"{out_string} NO_TIME"
         else:
-            return f"{self.course} {self.days} {start_time}-{end_time}"
+            return f"{out_string} {self.days} {start_time}-{end_time}"
 
 
 class Schedule:
@@ -55,7 +61,13 @@ class Schedule:
         for course in self.courses:
             days = day_separator(course.days)
             while len(days) > 0:
-                c = Course(course.id, course.course, days[0], course.time_string)
+                c = Course(
+                    course.id,
+                    course.course,
+                    days[0],
+                    course.time_string,
+                    course.waitlist,
+                )
                 if days[0] == "M":
                     week[0].append(c)
                 elif days[0] == "T":
@@ -90,6 +102,8 @@ class Schedule:
         self.bad_day((schedule_parameters["bad_day"]))
         self.earliest_time(schedule_parameters["earliest_time"])
         self.latest_time(schedule_parameters["latest_time"])
+        if schedule_parameters["prefer-no-waitlist"]:
+            self.waitlist()
 
     def around_time(self, comparison_time: time, time_distance: time):
         start_time = time_sorter(self.courses, start=True)[0]
@@ -147,6 +161,14 @@ class Schedule:
                 self.fitness -= 1
             else:
                 break
+
+    # Decrease fitness for each course with waitlist
+    def waitlist(self):
+        for course in self.courses:
+            if course.waitlist:
+                self.fitness -= 1
+            else:
+                self.fitness += 1
 
     def __repr__(self):
         out_string = ""

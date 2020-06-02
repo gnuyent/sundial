@@ -30,14 +30,25 @@ class ScheduleController:
         all_classes = []  # All meetings of each course
         for course in self.course_list:
             meetings = cursor.execute(
-                f"""SELECT course.id, meeting.days, meeting.hours FROM course, meeting
+                f"""SELECT course.id, meeting.days, meeting.hours, course.seats_available
+                        FROM course, meeting
                         WHERE meeting.course_id = course.id
                         AND course.course LIKE ('{course}')"""
             ).fetchall()  # Get every day/time course meets
-            for course_id, meeting_days, meeting_hours in meetings:
+            for course_id, meeting_days, meeting_hours, seats_available in meetings:
+                if seats_available == 0:
+                    waitlist = True
+                else:
+                    waitlist = False
                 if meeting_hours == "":  # Classes without times
                     meeting_hours = "0000-0000"
-                new_meeting = Course(course_id, course, meeting_days, meeting_hours)
+                new_meeting = Course(
+                    id=course_id,
+                    course=course,
+                    days=meeting_days,
+                    time_range=meeting_hours,
+                    waitlist=waitlist,
+                )
                 all_classes.append(new_meeting)
 
         connection.close()

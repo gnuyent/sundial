@@ -17,7 +17,7 @@ schedule_parameters = {
     "latest_time": time(
         18
     ),  # datetime.time object in hours, minutes of latest end time (exclusive)
-    "waitlist": True,  # Allow waitlisted classes
+    "prefer-no-waitlist": True,  # Prefer non-waitlisted classes
 }
 controller = ScheduleController(
     schedule_parameters,

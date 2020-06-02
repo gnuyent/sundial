@@ -32,7 +32,7 @@ class Course(Base):
     units = Column("units", Float)
     session = Column("session", Text)
     seats_available = Column("seats_available", Integer)
-    seats_total = Column("seats_open", Integer)
+    seats_total = Column("seats_total", Integer)
     full_title = Column("full_title", Text)
     description = Column("description", Text)
     prerequisite = Column("prerequisite", Text)
