@@ -30,7 +30,7 @@
 </div>
 <br>
 
-Sundial is a class scheduler for San Diego State University. Sundial is light, speedy, and extremely customizable. It is
+Sundial is a fully-loaded, full-stack class scheduling framework. Sundial is light, speedy, and extremely customizable. It is
 able to generate a schedule for any course list and time period available on the 
 [scheduling website](https://sunspot.sdsu.edu/schedule/search). Simplicity is the focus, just like telling time.
 

@@ -27,3 +27,4 @@ pip-delete-this-directory.txt
 .scrapy
 .idea/
 core/backend/scraper/classes.db.bak
+.pytest_cache/

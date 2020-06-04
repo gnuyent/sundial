@@ -1,11 +1,24 @@
+import sqlite3
+from contextlib import contextmanager
 from datetime import datetime, time, timedelta
 from typing import List
 
 
-# Common functions used by the controllers
+@contextmanager
+def connect_database(database_path: str, read_only: bool = True) -> None:
+    connection = sqlite3.connect(f"{database_path}", uri=read_only)
+    cursor = connection.cursor()
+    yield cursor
+    connection.close()
 
 
-def flatten(arr):
+def flatten(arr: List[List]) -> List:
+    """
+    Flattens a 2-D array.
+
+    :param arr: List[List] to flatten.
+    :return: Flattened List.
+    """
     for x in arr:
         if hasattr(x, "__iter__") and not isinstance(x, str):
             for y in flatten(x):
@@ -14,28 +27,13 @@ def flatten(arr):
             yield x
 
 
-# Checks if schedule has the same course multiple times
-def contains_duplicates(input_array) -> bool:
-    unique_courses = []
-    for value in input_array:
-        if value in unique_courses:
-            return True
-        else:
-            unique_courses.append(value)
-
-    return False
-
-
-# Checks if the same course has overlapping times.
-def identical_overlap(focus, comparison) -> bool:
-    if focus.hour_start == comparison.hour_start and focus.days == comparison.days:
-        return True
-    else:
-        return False
-
-
-# Get the days from a certain day string
 def day_separator(days: str) -> List[str]:
+    """
+    Separates days from a day string.
+
+    :param days: Day string in the format of "MTWTHF"
+    :return: List[str] of individual days.
+    """
     if "TH" in days:
         split_days = days.partition("TH")
         split_days = list(filter(None, split_days))  # Remove empty indices
@@ -51,21 +49,30 @@ def day_separator(days: str) -> List[str]:
     return split_days
 
 
-# Sort by start or end time
-def time_sorter(courses: List, start: bool = False) -> List[time]:
+def time_sorter(courses: List, ascending: bool = False) -> List[time]:
+    """
+    Sort by start or end time.
+
+    :param courses: List[Course] containing courses to sort by time.
+    :param ascending: Boolean to sort times in ascending (True) or descending (False) order.
+    :return: List[datetime.time] containing sorted course times in the specified order.
+    """
     course_times = []
-    if start is False:
+    if ascending is False:
         [course_times.append(course.hour_end) for course in courses]
     else:
         [course_times.append(course.hour_start) for course in courses]
-    course_times.sort(reverse=not start)
+    course_times.sort(reverse=not ascending)
     return course_times
 
 
-# Generate average time of time list. Returns datetime object
 def average_time(dates: List[time]) -> datetime:
+    """
+    Generates the average time from a list of times.
+
+    :param dates: List[time] to find the average of.
+    :return: datetime.datetime object that contains the average time from the list.
+    """
     dates = [datetime(2020, 1, 1, time.hour, time.minute) for time in dates]
     reference_date = datetime(1900, 1, 1)
-    return reference_date + sum(
-        [date - reference_date for date in dates], timedelta()
-    ) / len(dates)
+    return reference_date + sum([date - reference_date for date in dates], timedelta()) / len(dates)
