@@ -10,6 +10,9 @@
     <a href="https://www.python.org/downloads/">
         <img src="https://badgen.net/badge/python/3.8.3/?color=green" alt="Python Version" />
     </a>
+    <a href="https://www.rust-lang.org/tools/install">
+        <img src="https://badgen.net/badge/rust/1.44/?color=orange" alt="Rust Version" />
+    </a>
     <a href="https://github.com/gnuyent/sundial/blob/master/LICENSE.md">
         <img src="https://badgen.net/badge/license/MIT/blue" alt="License" />
     </a>
@@ -30,8 +33,8 @@
 </div>
 <br>
 
-Sundial is a fully-loaded, full-stack class scheduling framework. Sundial is light, speedy, and extremely customizable. It is
-able to generate a schedule for any course list and time period available on the 
+Sundial is a class scheduling framework. Sundial is light, speedy, and extremely customizable. It is
+able to generate a schedule for any course list and time period available on the
 [scheduling website](https://sunspot.sdsu.edu/schedule/search). Simplicity is the focus, just like telling time.
 
 ## Features
@@ -45,38 +48,15 @@ able to generate a schedule for any course list and time period available on the
     * 👩‍ Include certain professors*.
 
 <small>*not currently implemented.</small>
-    
+
 ## Quick Start
-1. Download the latest release on the releases page.
-2. Extract the folder and install the Python requirements with `pip install -r requirements.txt`
-3. Configure `sundial.py`
-3. Run `python sundial.py`
+TODO
 
 ## Installation
-1. Download the latest release on the [releases](https://github.com/gnuyent/sundial/releases/) page.
-2. Install dependencies (`pip install -r requirements.txt`):
-    * [Python 3](https://www.python.org/downloads/) (tested on Python 3.8.3)
-3. Generate course database
-    * Navigate to the `scraper/` directory in your preferred terminal.
-    * Run the command `scrapy crawl allcourses --loglevel WARNING`
-        * This command will take a few minutes to execute.
-    * Make sure that `classes.db` is in the top-level `sundial/` directory.
-3. Configure `sundial.py`
-    * Set schedule parameters to desired fields. The algorithm will still generate schedules that do not meet these 
-    guidelines.
-        * `around_time` attempts to generate a schedule around this time.
-        * `maximum_time_distance` the furthest time (hours and minutes) from `around_time` that you want to have a 
-        class.
-        * `bad_day` day(s) that you do not want to take a class
-        * `earliest_time` the earliest time you are willing to take a class.
-        * `latest_time` the latest time you are willing for a class to end.
-        * `prefer-no-waitlist` prefer classes that do not have a waitlist.
-4. Edit line 14 with your classes
-    * Make sure classes are comma-separated and formatted correctly.
-5. Run `python sundial.py`
+TODO
 
 ## Troubleshooting
-sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant 
+sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant
 information (logs, screenshots, etc) as possible.
 
 ## Contributing
