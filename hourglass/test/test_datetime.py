@@ -1,5 +1,6 @@
-from hourglass import DateTime, Day
 import pytest
+
+from hourglass.datetime import DateTime, Day
 
 
 class TestDay:

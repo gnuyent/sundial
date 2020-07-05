@@ -1,9 +1,21 @@
-from hourglass.datetime import Day
 from datetime import time
 from typing import List
 
+from hourglass.datetime import Day
+
 
 class ScheduleParameters:
+    """
+    Data storage for user-given preferences.
+
+    `ScheduleParameters` properly checks and formats data user-defined restrictions so
+    that it can be processed later.
+
+    Parameters
+    ----------
+
+    """
+
     def __init__(
         self,
         around_time: time = time.min,

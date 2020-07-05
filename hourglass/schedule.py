@@ -1,27 +1,25 @@
+from typing import List
+
 from hourglass.course import Course
 from hourglass.datetime import Day
-from typing import List
 
 
 class Schedule:
-    def __init__(self, courses: List(Course) = [Course()], fitness=0):
+    def __init__(self, courses: List[Course] = [Course()], fitness=0):
         self.courses = courses
         self.fitness = fitness
 
     def is_valid(self) -> bool:
-        """
-        Determines if the current schedules does not have overlapping times.
-        """
+        """Determines if the current schedules does not have overlapping times."""
         # TODO: Implement this method
         return True
 
-    def avoid_day(self, bad_days: List(Day)) -> bool:
+    def avoid_day(self, bad_days: List[Day]) -> bool:
         """
-        Modifies the current schedule's fitness if it contains a day that the user wants avoided.
+        Modify the current schedule's fitness if it contains a day that the user wants avoided.
 
         :param bad_days: `List(Day)` that contains days to avoid.
         """
-
         current_schedule_days = [
             day
             for date.day in date

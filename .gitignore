@@ -9,11 +9,11 @@
 .installed.cfg
 .pytest_cache/
 .scrapy
+.tox/
 MANIFEST
 Session.vim
 __pycache__/
 build/
-core/backend/scraper/classes.db.bak
 develop-eggs/
 dist/
 downloads/
