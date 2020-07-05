@@ -97,3 +97,4 @@ class ScraperDatabasePipeline(object):
             session.close()
 
         return item
+

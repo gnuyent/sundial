@@ -98,3 +98,4 @@ class AllCoursesSpider(scrapy.Spider):
 
         # Fill in empty values
         yield item
+

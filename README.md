@@ -30,7 +30,7 @@
 </div>
 <br>
 
-Sundial is a class scheduler for San Diego State University. Sundial is light, speedy, and extremely customizable. It is
+Sundial is a fully-loaded, full-stack class scheduling framework. Sundial is light, speedy, and extremely customizable. It is
 able to generate a schedule for any course list and time period available on the 
 [scheduling website](https://sunspot.sdsu.edu/schedule/search). Simplicity is the focus, just like telling time.
 
@@ -41,7 +41,7 @@ able to generate a schedule for any course list and time period available on the
     * ❌ Reject certain days.
     * 🌄 Set the earliest time.
     * 🌙 Set the latest time.
-    * 📋 Avoid waitlists*.
+    * 📋 Avoid waitlists.
     * 👩‍ Include certain professors*.
 
 <small>*not currently implemented.</small>
@@ -55,9 +55,7 @@ able to generate a schedule for any course list and time period available on the
 ## Installation
 1. Download the latest release on the [releases](https://github.com/gnuyent/sundial/releases/) page.
 2. Install dependencies (`pip install -r requirements.txt`):
-    * [Python 3](https://www.python.org/downloads/) (tested on Python 3.8.2)
-    * Scrapy>=2.0.1
-    * SQLAlchemy>=1.3.15
+    * [Python 3](https://www.python.org/downloads/) (tested on Python 3.8.3)
 3. Generate course database
     * Navigate to the `scraper/` directory in your preferred terminal.
     * Run the command `scrapy crawl allcourses --loglevel WARNING`
@@ -72,7 +70,7 @@ able to generate a schedule for any course list and time period available on the
         * `bad_day` day(s) that you do not want to take a class
         * `earliest_time` the earliest time you are willing to take a class.
         * `latest_time` the latest time you are willing for a class to end.
-        * `waitlist` prefer classes that do not have a waitlist.
+        * `prefer-no-waitlist` prefer classes that do not have a waitlist.
 4. Edit line 14 with your classes
     * Make sure classes are comma-separated and formatted correctly.
 5. Run `python sundial.py`

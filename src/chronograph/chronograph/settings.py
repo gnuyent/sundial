@@ -1,7 +1,7 @@
-BOT_NAME = 'scraper'
+BOT_NAME = 'chronograph'
 
-SPIDER_MODULES = ['scraper.spiders']
-NEWSPIDER_MODULE = 'scraper.spiders'
+SPIDER_MODULES = ['chronograph.spiders']
+NEWSPIDER_MODULE = 'chronograph.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -16,7 +16,7 @@ Play around with this number. Current value is ~2x slower than default 16.
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'scraper.pipelines.ScraperDatabasePipeline': 100,
+    'chronograph.pipelines.ChronographDatabasePipeline': 100,
 }
 
 # Database settings

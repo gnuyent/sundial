@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+<Right># -*- coding: utf-8 -*-
 
 # Define here the models for your scraped items
 #
@@ -28,3 +28,4 @@ class CourseItem(scrapy.Item):
     general_text = scrapy.Field()  # optional
     meetings = scrapy.Field()
     footnotes = scrapy.Field()
+

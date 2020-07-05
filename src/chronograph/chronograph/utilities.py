@@ -52,3 +52,4 @@ def parse_footnotes(sel):
     for idx, code in enumerate(footnote_codes):
         footnotes[footnote_codes[idx]] = footnote_details[idx]
     return footnotes
+

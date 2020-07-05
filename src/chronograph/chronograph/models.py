@@ -62,3 +62,4 @@ class Footnote(Base):
     footnote_id = Column("footnote_id", String(20), primary_key=True)
     code = Column("code", Text)
     text = Column("text", Text)
+
