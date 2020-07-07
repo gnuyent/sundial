@@ -10,6 +10,9 @@
     <a href="https://www.python.org/downloads/">
         <img src="https://badgen.net/badge/python/3.8.3/?color=green" alt="Python Version" />
     </a>
+    <a>
+    	<img src="https://travis-ci.com/gnuyent/sundial.svg?token=fz5cYxFCABETbrnNjs4p&branch=master" alt="Build Status" />
+    </a>
     <a href="https://github.com/gnuyent/sundial/blob/master/LICENSE.md">
         <img src="https://badgen.net/badge/license/GPL2/orange" alt="License" />
     </a>
@@ -57,7 +60,7 @@ sundial is a continuous work in progress. If you start facing problems, please s
 information (logs, screenshots, etc) as possible.
 
 ## Contributing
-sundial is licensed under the MIT license. Pull requests are welcome.
+sundial is licensed under the GPL2 license. Pull requests are welcome.
 
 sundial does not guarantee that you meet all the prerequisites to take a class. Always consult an academic counselor
 before registering for classes.
