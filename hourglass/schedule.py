@@ -36,7 +36,6 @@ class Schedule:
         bool
             True if the current schedule is valid, False otherwise.
         """
-        # TODO: Handle special case where the same course has overlapping times.
         times: List[DateTime] = []
         # retrieve all DateTime from the schedule's courses
         for course in self.courses:

@@ -11,7 +11,7 @@
         <img src="https://badgen.net/badge/python/3.8.3/?color=green" alt="Python Version" />
     </a>
     <a href="https://github.com/gnuyent/sundial/blob/master/LICENSE.md">
-        <img src="https://badgen.net/badge/license/MIT/blue" alt="License" />
+        <img src="https://badgen.net/badge/license/GPL2/orange" alt="License" />
     </a>
 </p>
 
