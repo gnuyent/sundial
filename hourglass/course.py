@@ -1,8 +1,8 @@
 from datetime import timedelta
 from typing import Dict, List
 
-from hourglass.datetime import Day, DateTime
 from hourglass.meeting import Meeting
+from hourglass.period import DateTime, Day
 
 
 class Course:
@@ -37,9 +37,9 @@ class Course:
         Prerequisites to take the course.
     schedule_num : int
         Official schedule number.
-    seats_available : int
+    seats_total : int
         Maximum possible seats in the course.
-    seats_open : int
+    seats_available : int
         Available seats in the course.
     section : int
         Section of the course.
@@ -71,7 +71,7 @@ class Course:
         prerequisite: str = "",
         schedule_num: int = 0,
         seats_available: int = 0,
-        seats_open: int = 0,
+        seats_total: int = 0,
         section: int = 0,
         session: str = "",
         statement: str = "",
@@ -92,7 +92,7 @@ class Course:
         self.prerequisite = prerequisite
         self.schedule_num = schedule_num
         self.seats_available = seats_available
-        self.seats_open = seats_open
+        self.seats_total = seats_total
         self.section = section
         self.session = session
         self.statement = statement

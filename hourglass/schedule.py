@@ -2,7 +2,7 @@ from datetime import time
 from typing import Dict, List
 
 from hourglass.course import Course
-from hourglass.datetime import Day, DateTime
+from hourglass.period import DateTime, Day
 from hourglass.schedule_parameters import ScheduleParameters
 
 

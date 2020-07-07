@@ -6,8 +6,8 @@ from typing import List
 from sqlalchemy import create_engine, text
 
 from hourglass.course import Course
-from hourglass.datetime import DateTime, Day
 from hourglass.meeting import Meeting
+from hourglass.period import DateTime, Day
 from hourglass.schedule import Schedule
 from hourglass.schedule_parameters import ScheduleParameters
 
@@ -76,7 +76,7 @@ class ScheduleController:
         )
         courses = conn.execute(query, course=course_string).fetchall()
         for course in courses:
-            waitlist = course.seats_open == 0
+            waitlist = course.seats_available == 0
             id = course.id
             # Meetings
             meetings = []
@@ -137,7 +137,7 @@ class ScheduleController:
                 prerequisite=course.prerequisite,
                 schedule_num=course.schedule_num,
                 seats_available=course.seats_available,
-                seats_open=course.seats_open,
+                seats_total=course.seats_total,
                 section=course.section,
                 session=course.session,
                 statement=course.statement,

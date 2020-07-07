@@ -1,8 +1,8 @@
 from datetime import time
 
 from hourglass.course import Course
-from hourglass.datetime import DateTime, Day
 from hourglass.meeting import Meeting
+from hourglass.period import DateTime, Day
 from hourglass.schedule import Schedule
 
 

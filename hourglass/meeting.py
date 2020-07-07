@@ -1,4 +1,4 @@
-from hourglass.datetime import DateTime
+from hourglass.period import DateTime
 
 
 class Meeting:

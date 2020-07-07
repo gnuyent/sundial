@@ -47,33 +47,10 @@ able to generate a schedule for any course list and time period available on the
 <small>*not currently implemented.</small>
     
 ## Quick Start
-1. Download the latest release on the releases page.
-2. Extract the folder and install the Python requirements with `pip install -r requirements.txt`
-3. Configure `sundial.py`
-3. Run `python sundial.py`
+TODO
 
 ## Installation
-1. Download the latest release on the [releases](https://github.com/gnuyent/sundial/releases/) page.
-2. Install dependencies (`pip install -r requirements.txt`):
-    * [Python 3](https://www.python.org/downloads/) (tested on Python 3.8.3)
-3. Generate course database
-    * Navigate to the `scraper/` directory in your preferred terminal.
-    * Run the command `scrapy crawl allcourses --loglevel WARNING`
-        * This command will take a few minutes to execute.
-    * Make sure that `classes.db` is in the top-level `sundial/` directory.
-3. Configure `sundial.py`
-    * Set schedule parameters to desired fields. The algorithm will still generate schedules that do not meet these 
-    guidelines.
-        * `around_time` attempts to generate a schedule around this time.
-        * `maximum_time_distance` the furthest time (hours and minutes) from `around_time` that you want to have a 
-        class.
-        * `bad_day` day(s) that you do not want to take a class
-        * `earliest_time` the earliest time you are willing to take a class.
-        * `latest_time` the latest time you are willing for a class to end.
-        * `prefer-no-waitlist` prefer classes that do not have a waitlist.
-4. Edit line 14 with your classes
-    * Make sure classes are comma-separated and formatted correctly.
-5. Run `python sundial.py`
+TODO
 
 ## Troubleshooting
 sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant 

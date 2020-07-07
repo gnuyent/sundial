@@ -1,8 +1,7 @@
+import time as t
 from datetime import time
 
-import time as t
-
-from hourglass.datetime import Day
+from hourglass.period import Day
 from hourglass.schedule_controller import ScheduleController
 from hourglass.schedule_parameters import ScheduleParameters
 

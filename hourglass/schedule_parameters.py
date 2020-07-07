@@ -1,7 +1,7 @@
 from datetime import time
 from typing import List
 
-from hourglass.datetime import Day
+from hourglass.period import Day
 
 
 class ScheduleParameters:
