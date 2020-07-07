@@ -18,7 +18,16 @@ class CourseAPI(Resource):
         return jsonify(json_list=json)
 
 
+class SubjectAPI(Resource):
+    def get(self, subject):
+        search = f"{subject}-%"
+        query = Course.query.filter(Course.course.like(search)).all()
+        json = [field.serialize for field in query]
+        return jsonify(json_list=json)
+
+
 api.add_resource(CourseAPI, "/api/course/<string:schedule_num>")
+api.add_resource(SubjectAPI, "/api/subject/<string:subject>")
 
 if __name__ == "__main__":
     app.run(debug=True)

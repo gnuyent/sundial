@@ -44,4 +44,3 @@ class Course(db.Model):
             "statement": self.statement,
             "general_text": self.general_text,
         }
-
