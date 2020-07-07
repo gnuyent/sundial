@@ -19,8 +19,8 @@ class ScheduleParameters:
     def __init__(
         self,
         around_time: time = time.min,
-        bad_day: List(Day) = [],
-        earliest_time: time = time.min(),
+        bad_day: List[Day] = [],
+        earliest_time: time = time.min,
         include_courses=[],
         include_professors=[],
         latest_time: time = time.min,

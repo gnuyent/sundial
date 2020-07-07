@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from scrapy.linkextractors import LinkExtractor
-from scrapy.selector import Selector
-
 from core.backend.scraper.items import CourseItem
 from core.backend.scraper.utilities import clean, parse_footnotes, parse_meetings
+from scrapy.linkextractors import LinkExtractor
+from scrapy.selector import Selector
 
 
 class AllCoursesSpider(scrapy.Spider):

@@ -1,6 +1,5 @@
 from scrapy.utils.project import get_project_settings
-from sqlalchemy import Integer, String, Float, Text
-from sqlalchemy import create_engine, Column, ForeignKey
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 

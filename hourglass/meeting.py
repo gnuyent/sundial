@@ -1,7 +1,24 @@
-from hourglass.datetime import DateTime, Day
+from hourglass.datetime import DateTime
 
 
 class Meeting:
+    """
+    Store meeting information for Course.
+
+    Parameters
+    ----------
+    date : DateTime
+        Date of the meeting.
+    instructor : str
+        Name of the instructor.
+    location : str
+        Location of the meeting.
+    meeting_id : str
+        Meeting ID from the database.
+    meeting_type : str
+        Type of meeting.
+    """
+
     def __init__(
         self,
         date: DateTime = DateTime(),

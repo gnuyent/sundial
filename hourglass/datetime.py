@@ -24,12 +24,15 @@ class Day(Enum):
             "M": Day.Monday,
             "T": Day.Tuesday,
             "W": Day.Wednesday,
-            "H": Day.Thursday,  # 'H' is matched since we iterate backwards in `parse_days`
+            "H": Day.Thursday,  # 'H' is matched since we iterate backwards in `parse_days` # noqa: E501
             "F": Day.Friday,
-            "O": Day.Online,
-            "A": Day.Arranged,
         }
-        return days[focus]
+        try:
+            return days[focus]
+        except KeyError:
+            raise ValueError(
+                f"{focus} was unable to be parsed. Ensure that the input is valid."
+            )
 
     @staticmethod
     def parse_days(days: str) -> List[Day]:
@@ -39,11 +42,15 @@ class Day(Enum):
         Parameters
         ----------
         days : str
-               The string of days to convert from `["M", "T", "W", "TH", "F", "O", "A"]`.
+               The string of days to convert from `["M", "T", "W", "TH", "F", "Online", "Arranged"]`. # noqa: E501
         """
         days_list = list(days)
         return_list = []
 
+        if days == "":
+            return [Day.Online]
+        elif days == "Arranged":
+            return [Day.Arranged]
         while True:
             try:
                 focus: Day = Day._match_day(days_list.pop())
@@ -79,7 +86,17 @@ class DateTime:
         self.start = start
         self.end = end
 
-    def parse_time(self, range_string: str = "0000-0000") -> List[time]:
+    def __lt__(self, other):
+        return self.start < other.start
+
+    def __repr__(self):
+        start_time = str(self.start.isoformat(timespec="minutes"))
+        end_time = str(self.end.isoformat(timespec="minutes"))
+        out_string = f"{self.day.name} {start_time}-{end_time}"
+        return out_string
+
+    @staticmethod
+    def parse_time(range_string: str = "0000-0000") -> List[time]:
         """
         Generate a list of two `datetime.time` objects from a string.
 
@@ -90,7 +107,7 @@ class DateTime:
         ----------
         hour_range_string : str
             String representation of the time in the format of 'HHMM-HHMM'.
-            (default: "0000-0000)
+            (default: "0000-0000")
 
         Returns
         -------
@@ -103,12 +120,14 @@ class DateTime:
             start_minute = int(hour_range[0][2:])
             end_hour = int(hour_range[1][0:2])
             end_minute = int(hour_range[1][2:])
+        except ValueError:
+            return [time.min, time.min]
         except IndexError:
             raise IndexError(
                 "Input was invalid. Ensure that your string is formatted correctly."
             )
 
-            start_time: time = time(start_hour, start_minute)
+        start_time: time = time(start_hour, start_minute)
         end_time: time = time(end_hour, end_minute)
 
         return [start_time, end_time]
