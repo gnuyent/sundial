@@ -1,9 +1,9 @@
 from datetime import time
 from typing import Dict, List
 
-from hourglass.course import Course
-from hourglass.period import DateTime, Day
-from hourglass.schedule_parameters import ScheduleParameters
+from sundial.scheduler.course import Course
+from sundial.scheduler.parameters import Parameters
+from sundial.scheduler.period import DateTime, Day
 
 
 class Schedule:
@@ -70,7 +70,7 @@ class Schedule:
 
         return True
 
-    def calculate_fitness(self, schedule_parameters: ScheduleParameters):
+    def calculate_fitness(self, schedule_parameters: Parameters):
         """
         Modify the schedule's fitness based on different parameters.
 
@@ -79,7 +79,7 @@ class Schedule:
 
         Parameters
         ----------
-        schedule_parameters : ScheduleParameters
+        schedule_parameters : Parameters
             User-defined schedule parameters to calculate.
         """
         self.fitness = 0  # reset to avoid undefined behavior

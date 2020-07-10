@@ -1,20 +1,33 @@
-import time as t
-from datetime import time
+from flask import Flask, jsonify
+from flask_restful import Api, Resource
+from flask_sqlalchemy import SQLAlchemy
 
-from hourglass.period import Day
-from hourglass.schedule_controller import ScheduleController
-from hourglass.schedule_parameters import ScheduleParameters
+from sundial.resources.models.course import Course
 
-start_time = t.time()
-sp = ScheduleParameters(
-    bad_day=Day.parse_days("TTH"), earliest_time=time(10), latest_time=time(18),
-)
-for i in range(100):
-    controller = ScheduleController(
-        sp,
-        ["A S-92A", "A S-200A", "CS-310", "CS-320", "ENS-331", "MATH-245", "MATH-254"],
-    )
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///classes.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+api = Api(app)
+db = SQLAlchemy(app)
 
-    controller.generate_schedules()
-    best = controller.best_schedule()
-print("--- %s seconds ---" % (t.time() - start_time))
+
+class CourseAPI(Resource):
+    def get(self, schedule_num):
+        query = Course.query.filter_by(schedule_num=schedule_num).all()
+        json = [field.serialize for field in query]
+        return jsonify(json_list=json)
+
+
+class SubjectAPI(Resource):
+    def get(self, subject):
+        search = f"{subject}-%"
+        query = Course.query.filter(Course.course.like(search)).all()
+        json = [field.serialize for field in query]
+        return jsonify(json_list=json)
+
+
+api.add_resource(CourseAPI, "/api/course/<string:schedule_num>")
+api.add_resource(SubjectAPI, "/api/subject/<string:subject>")
+
+if __name__ == "__main__":
+    app.run(debug=True)

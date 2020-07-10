@@ -1,14 +1,14 @@
 from datetime import time
 from typing import List
 
-from hourglass.period import Day
+from sundial.scheduler.period import Day
 
 
-class ScheduleParameters:
+class Parameters:
     """
     Data storage for user-given preferences.
 
-    `ScheduleParameters` properly checks and formats data user-defined restrictions so
+    `Parameters` properly checks and formats data user-defined restrictions so
     that it can be processed later.
 
     Parameters

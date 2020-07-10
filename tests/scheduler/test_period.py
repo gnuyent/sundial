@@ -1,6 +1,6 @@
 import pytest
 
-from hourglass.period import Day
+from sundial.scheduler.period import Day
 
 
 class TestDay:

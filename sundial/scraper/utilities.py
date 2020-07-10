@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import re
 
+# TODO: Update docstrings to be in numpy format.
+
 
 def clean(bloat, standard_length):
     """
@@ -24,7 +26,7 @@ def parse_meetings(sel):
     keys = ["types", "times", "days", "locations", "instructors"]
     meetings = {key: [] for key in keys}
     meeting_count = len(sel.xpath('.//div[@class="sectionFieldType column"]'))
-    # Filter by table to reduce extraneous information from classes that are HEADS of sections
+    # Filter by table to reduce extraneous information from classes that are HEADS of sections # noqa: E501
     for parameter in ["Type", "Time", "Day", "Location", "Instructor"]:
         search_string = f'.//div[@class="sectionField{parameter} column"]//text()'
         meeting_item = sel.xpath(search_string)
@@ -52,4 +54,3 @@ def parse_footnotes(sel):
     for idx, code in enumerate(footnote_codes):
         footnotes[footnote_codes[idx]] = footnote_details[idx]
     return footnotes
-

@@ -1,9 +1,9 @@
 from datetime import time
 
-from hourglass.course import Course
-from hourglass.meeting import Meeting
-from hourglass.period import DateTime, Day
-from hourglass.schedule import Schedule
+from sundial.scheduler.course import Course
+from sundial.scheduler.meeting import Meeting
+from sundial.scheduler.period import DateTime, Day
+from sundial.scheduler.schedule import Schedule
 
 
 class TestSchedule:

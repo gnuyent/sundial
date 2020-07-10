@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from core.backend.scraper.items import CourseItem
-from core.backend.scraper.utilities import clean, parse_footnotes, parse_meetings
 from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import Selector
+
+from sundial.scraper.items import CourseItem
+from sundial.scraper.utilities import clean, parse_footnotes, parse_meetings
 
 
 class AllCoursesSpider(scrapy.Spider):
@@ -13,14 +14,14 @@ class AllCoursesSpider(scrapy.Spider):
     def __init__(self, period="20204", **kwargs):
         """
         Initializes the start url with a given period to scrape.
-        :param period: Default is 20204 - Fall 2020. The correct format will be <YYYY><2-4>.
+        :param period: Default is 20204 - Fall 2020. The correct format will be <YYYY><2-4>. # noqa: E501
         2 is Spring. 3 is Summer. 4 is Fall.
         """
         semester = int(str(period)[-1])
         if semester < 2 or semester > 4:
             raise ValueError("Invalid period provided.")
         self.start_urls = [
-            f"https://sunspot.sdsu.edu/schedule/search?mode=browse_by_subject&category=browse_by_subject"
+            f"https://sunspot.sdsu.edu/schedule/search?mode=browse_by_subject&category=browse_by_subject"  # noqa: E501
             f"&period={period}"
         ]
         self.period = period
@@ -97,4 +98,3 @@ class AllCoursesSpider(scrapy.Spider):
 
         # Fill in empty values
         yield item
-

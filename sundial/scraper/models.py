@@ -1,9 +1,11 @@
+from typing import Any
+
 from scrapy.utils.project import get_project_settings
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+Base: Any = declarative_base()
 
 
 def db_connect():

@@ -1,8 +1,8 @@
 from datetime import timedelta
-from typing import Dict, List
+from typing import List
 
-from hourglass.meeting import Meeting
-from hourglass.period import DateTime, Day
+from sundial.scheduler.meeting import Meeting
+from sundial.scheduler.period import DateTime, Day
 
 
 class Course:
@@ -11,93 +11,42 @@ class Course:
 
     Parameters
     ----------
-    course_hours : str
-        Represents the weekly time needed for the course.
-    course_title :
-        Name of the course.
     course :
         Abbreviation and number of the course.
-    description :
-        Given description of the course.
-    footnotes : Dict[str, str]
-        Footnote notices about the course.
-    full_title : str
-        Expanded title of the course.
-    general_text : str
-        More general information about the course.
     id : str
         Unique ID assigned to the course.
     meetings : List[Meeting]
         All meetings associated with the course.
     overlaps : bool
-        True if course contains overlapping times, False otherwise.
-    period : int
-        Time period of when the course exists.
-    prerequisite : str
-        Prerequisites to take the course.
+        True if course contains overlapping times, False otherwise. Used to determine what time to use (the one with the longest duration) in calculating schedule overlap. # noqa: E501
     schedule_num : int
         Official schedule number.
     seats_total : int
         Maximum possible seats in the course.
     seats_available : int
         Available seats in the course.
-    section : int
-        Section of the course.
-    session : str
-        Session of the course. Typically the season.
-    statement : str
-        Course statement by the department.
-    units : float
-        Units given for the course.
-    url : int
-        Absolute URL for the course.
     waitlist : int
         True if course is waitlisted, False otherwise.
     """
 
     def __init__(
         self,
-        course_hours: str = "",
-        course_title: str = "",
         course: str = "",
-        description: str = "",
-        footnotes: Dict[str, str] = {},
-        full_title: str = "",
-        general_text: str = "",
         id: str = "",
         meetings: List[Meeting] = [Meeting()],
         overlaps: bool = False,
-        period: int = 0,
-        prerequisite: str = "",
         schedule_num: int = 0,
         seats_available: int = 0,
         seats_total: int = 0,
-        section: int = 0,
-        session: str = "",
-        statement: str = "",
-        units: float = 0.0,
-        url: str = "",
         waitlist: bool = True,
     ):
-        self.course_title = course_title
         self.course = course
-        self.description = description
-        self.footnotes = footnotes
-        self.full_title = full_title
-        self.general_text = general_text
         self.id = id
         self.meetings = meetings
         self.overlaps = overlaps
-        self.period = period
-        self.prerequisite = prerequisite
         self.schedule_num = schedule_num
         self.seats_available = seats_available
         self.seats_total = seats_total
-        self.section = section
-        self.session = session
-        self.statement = statement
-        self.units = units
-        self.url = url
         self.waitlist = waitlist
 
     def __repr__(self):
@@ -143,26 +92,25 @@ class Course:
         """
         Calculate the longest time in an overlapping scenario.
 
+        Some courses contain times that are overlapping e.g. Monday 0800-0850, Monday 0800-0950. In this case, we want to determine what the longest time is within that overlap. From the example before, this method would return Monday 0800-0950. # noqa: E501
+
         Returns
         -------
         DateTime
             DateTime representing the greatest difference in time.
-        None
-            If course does not overlap.
-
         """
         times = [meeting.date for meeting in self.meetings]
         highest_index = 0
         highest_diff: float = 0
-        for idx in range(len(self.meetings)):
+        for idx, meeting in enumerate(times):
             start: timedelta = timedelta(
-                hours=times[idx].start.hour, minutes=times[idx].start.minute
+                hours=meeting.start.hour, minutes=meeting.start.minute
             )
             end: timedelta = timedelta(
-                hours=times[idx].end.hour, minutes=times[idx].end.minute
+                hours=meeting.end.hour, minutes=meeting.end.minute
             )
             difference = (end - start).total_seconds()
-        if difference > highest_diff:
-            highest_diff = difference
-            highest_index = idx
+            if difference > highest_diff:
+                highest_diff = difference
+                highest_index = idx
         return self.meetings[highest_index].date

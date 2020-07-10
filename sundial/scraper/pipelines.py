@@ -4,18 +4,13 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-from core.backend.scraper.models import (
-    Course,
-    Footnote,
-    Meeting,
-    create_table,
-    db_connect,
-)
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
+from sundial.scraper.models import Course, Footnote, Meeting, create_table, db_connect
 
-class ScraperDatabasePipeline(object):
+
+class ScraperDatabasePipeline:
     def __init__(self):
         """
         Initializes database connection and sessionmaker
@@ -27,7 +22,7 @@ class ScraperDatabasePipeline(object):
 
     def process_item(self, item, spider):
         """
-        Processes courses, meetings, and footnotes and saves into the database. Called once per item.
+        Processes courses, meetings, and footnotes and saves into the database. Called once per item. # noqa: E501
         """
         session = self.Session()
         session.query(item["id"])
@@ -96,4 +91,3 @@ class ScraperDatabasePipeline(object):
             session.close()
 
         return item
-
