@@ -34,10 +34,9 @@ Sundial is a wrapper for San Diego State University's class scheduler with added
 is built for speed and extensibility. It's quick, just like telling time.
 
 ## Features
-* Built with the latest frameworks.
+* RESTful API access.
 * Generates parameterized class schedules.
 * Quick links to RateMyProfessor and [assist.org](https://assist.org/).
-* Reliable and fast access even with heavy loads.
 
 ## Installation
 Ensure that you have the latest version of [Python 3](https://www.python.org/downloads/).
