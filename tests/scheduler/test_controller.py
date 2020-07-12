@@ -1,17 +1,12 @@
-from datetime import time
-
 from sundial.scheduler.controller import Controller
 from sundial.scheduler.parameters import Parameters
-from sundial.scheduler.period import Day
 
 
 class TestController:
     """Class for testing Controller."""
 
     def test_generate_schedules(self):
-        sp = Parameters(
-            bad_day=Day.parse_days("TTH"), earliest_time=time(10), latest_time=time(18)
-        )
+        sp = Parameters(bad_day="TTH", earliest_time="1000", latest_time="18")
         controller = Controller(
             sp,
             [

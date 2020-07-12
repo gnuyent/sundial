@@ -3,17 +3,26 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from sundial import crud
+from sundial.database import get_db
 from sundial.scheduler.controller import Controller
 from sundial.scheduler.parameters import Parameters
 from sundial.schemas import Course, ScheduleParameters
-from sundial.database import get_db
-from sundial import crud
 
 router = APIRouter()
 
 
 @router.get("", response_model=List[Course])
 def generate_schedules(parameters: ScheduleParameters, db: Session = Depends(get_db)):
+    """Generate the best schedule from given parameters and courses.
+
+    Parameters
+    ----------
+    parameters : ScheduleParameters
+        Dict of schedule parameters.
+    db : Session
+        SQLAlchemy connection to a database.
+    """
     sp = Parameters(
         parameters.around_time,
         parameters.bad_day,

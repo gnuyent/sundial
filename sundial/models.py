@@ -12,7 +12,7 @@ class Course(Base):
     period = Column("period", Integer)
     course = Column("course", Text)
     course_title = Column("course_title", Text)
-    section = Column("section", Integer)
+    section = Column("section", String)
     schedule_num = Column("schedule_num", Integer)
     units = Column("units", Float)
     session = Column("session", Text)

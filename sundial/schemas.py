@@ -9,7 +9,7 @@ class Course(BaseModel):
     period: int
     course: str
     course_title: str
-    section: int
+    section: str
     schedule_num: int
     units: float
     session: str
@@ -21,6 +21,19 @@ class Course(BaseModel):
     course_hours: Optional[str] = None
     statement: Optional[str] = None
     general_text: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
+class Meeting(BaseModel):
+    course_id: str
+    meeting_id: str
+    meeting_type: str
+    hours: str
+    days: str
+    location: str
+    instructor: str
 
     class Config:
         orm_mode = True

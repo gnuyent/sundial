@@ -3,9 +3,8 @@ import logging
 from datetime import time
 from typing import List, Tuple
 
-from sqlalchemy import text
-
-from sundial.database import engine
+from sundial import models
+from sundial.database import get_db
 from sundial.scheduler.course import Course
 from sundial.scheduler.meeting import Meeting
 from sundial.scheduler.parameters import Parameters
@@ -14,10 +13,7 @@ from sundial.scheduler.schedule import Schedule
 
 
 class Controller:
-    """
-    Controller is an abstraction for easy interaction with the database.
-
-    In essence, ScheduleController provides an API for higher-level calls.
+    """Controller is an API abstraction for easy interaction with the database.
 
     Parameters
     ----------
@@ -30,9 +26,10 @@ class Controller:
     def __init__(
         self, schedule_parameters: Parameters, course_list: List[str] = [],
     ):
-        self.schedule_parameters = schedule_parameters
-        self.course_list = course_list
+        self.schedule_parameters: Parameters = schedule_parameters
+        self.course_list: List[str] = course_list
         self.schedules: List[Schedule] = []
+        self.db = next(get_db())
 
     def generate_schedules(self):
         """Generate all potential, valid schedules."""
@@ -62,17 +59,18 @@ class Controller:
         List[Course]
             List of all courses matching the given input string.
         """
-        conn = engine.connect()
         all_courses = []
-        query = text(
-            """
-            SELECT course.course, course.id, course.schedule_num, course.seats_available, course.seats_total
-            FROM course
-            WHERE course.course
-            LIKE :course
-            """  # noqa: E501
+        courses = (
+            self.db.query(
+                models.Course.course,
+                models.Course.id,
+                models.Course.schedule_num,
+                models.Course.seats_available,
+                models.Course.seats_total,
+            )
+            .filter(models.Course.course == course_string)
+            .all()
         )
-        courses = conn.execute(query, course=course_string).fetchall()
         for course in courses:
             waitlist = course.seats_available == 0
             id = course.id
@@ -92,17 +90,14 @@ class Controller:
         return all_courses
 
     def generate_meetings(self, course_id: str) -> Tuple[List[Meeting], bool]:
-        conn = engine.connect()
         all_meetings = []
-        query = text(
-            """
-                SELECT meeting.days, meeting.hours, meeting.meeting_id
-                FROM meeting
-                WHERE meeting.course_id
-                LIKE :course
-                """
+        meetings = (
+            self.db.query(
+                models.Meeting.days, models.Meeting.hours, models.Meeting.meeting_id
+            )
+            .filter(models.Meeting.course_id == course_id)
+            .all()
         )
-        meetings = conn.execute(query, course=course_id).fetchall()
         for meeting in meetings:
             days: List[Day] = Day.parse_days(meeting.days)
             hours: List[time] = DateTime.parse_time(meeting.hours)

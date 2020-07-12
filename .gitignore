@@ -14,7 +14,7 @@ MANIFEST
 Session.vim
 __pycache__/
 build/
-classes.db
+classes*.db
 develop-eggs/
 dist/
 downloads/
