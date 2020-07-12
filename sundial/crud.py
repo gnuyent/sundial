@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sundial import models
+from typing import List
 
 
 def get_course_all(db: Session):
@@ -16,6 +17,12 @@ def get_course(db: Session, schedule_number: int):
         db.query(models.Course)
         .filter(models.Course.schedule_num == schedule_number)
         .first()
+    )
+
+
+def get_course_multiple(db: Session, multiple: List[int]):
+    return (
+        db.query(models.Course).filter(models.Course.schedule_num.in_(multiple)).all()
     )
 
 

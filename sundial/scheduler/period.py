@@ -96,6 +96,33 @@ class DateTime:
         return out_string
 
     @staticmethod
+    def parse_single_time(time_string: str) -> time:
+        """
+        Generate a `datetime.time` object from a valid string.
+
+        Parameters
+        ----------
+        time_string : str
+            String representation of the time in 24 hour format 'HHMM'.
+
+        Returns
+        -------
+        time
+            Time representing the input.
+        """
+        try:
+            hour = int(time_string[0:2])
+            minute = int(time_string[2:])
+        except ValueError:
+            return time.min
+        except IndexError:
+            raise IndexError(
+                "Input was invalid. Ensure that your string is formatted correctly."
+            )
+
+        return time(hour, minute)
+
+    @staticmethod
     def parse_time(range_string: str = "0000-0000") -> List[time]:
         """
         Generate a list of two `datetime.time` objects from a string.
@@ -111,7 +138,7 @@ class DateTime:
 
         Returns
         -------
-        List[Time]
+        List[time]
             List of `datetime.time` in the same order as the given string.
         """
         try:

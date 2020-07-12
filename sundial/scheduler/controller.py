@@ -28,9 +28,7 @@ class Controller:
     """
 
     def __init__(
-        self,
-        schedule_parameters: Parameters = Parameters(),
-        course_list: List[str] = [],
+        self, schedule_parameters: Parameters, course_list: List[str] = [],
     ):
         self.schedule_parameters = schedule_parameters
         self.course_list = course_list

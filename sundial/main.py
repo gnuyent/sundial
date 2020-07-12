@@ -10,5 +10,5 @@ app = FastAPI()
 
 
 app.include_router(course.router, prefix="/api/course")
-app.include_router(subject.router, prefix="/api/subject")
 app.include_router(schedule.router, prefix="/api/schedule")
+app.include_router(subject.router, prefix="/api/subject")

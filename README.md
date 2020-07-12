@@ -31,18 +31,18 @@
 <br>
 
 Sundial is a wrapper for San Diego State University's class scheduler with added features. Sundial
-is built for speed and extensibility with modern programming tooling. It's quick, just like telling time.
+is built for speed and extensibility. It's quick, just like telling time.
 
 ## Features
-* Built with Python 3 (FastAPI) and JavaScript (VueJS)
-* Generate parameterized class schedules.
+* Built with the latest frameworks.
+* Generates parameterized class schedules.
 * Quick links to RateMyProfessor and [assist.org](https://assist.org/).
-* Reliable access even with heavy loads.
+* Reliable and fast access even with heavy loads.
 
 ## Installation
 Ensure that you have the latest version of [Python 3](https://www.python.org/downloads/).
 
-* `pip install -r requirements.txt`
+* `pip install .`
 * `python sundial.py`
 
 ## Troubleshooting
