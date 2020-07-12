@@ -5,6 +5,7 @@ from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, create_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+# TODO: Refactor this code into PROJECT_ROOT/sundial/models.py
 Base: Any = declarative_base()
 
 

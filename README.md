@@ -10,9 +10,6 @@
     <a href="https://www.python.org/downloads/">
         <img src="https://badgen.net/badge/python/3.8.3/?color=green" alt="Python Version" />
     </a>
-    <a>
-    	<img src="https://travis-ci.com/gnuyent/sundial.svg?token=fz5cYxFCABETbrnNjs4p&branch=master" alt="Build Status" />
-    </a>
     <a href="https://github.com/gnuyent/sundial/blob/master/LICENSE">
         <img src="https://badgen.net/badge/license/GPL2/orange" alt="License" />
     </a>
@@ -34,26 +31,19 @@
 <br>
 
 Sundial is a wrapper for San Diego State University's class scheduler with added features. Sundial
-is light, speedy, and extremely customizable. It is able to generate a schedule for any course list
-and time period available on the [scheduling website](https://sunspot.sdsu.edu/schedule/search).
-Simplicity is the focus, just like telling time.
+is built for speed and extensibility with modern programming tooling. It's quick, just like telling time.
 
 ## Features
-* Quickly generates schedules.
-* Flexible options based on different requirements:
-    * Set a time to schedule around.
-    * Reject certain days.
-    * Set the earliest time.
-    * Set the latest time.
-    * Avoid waitlists.
-    * Include certain professors*.
-
-
-## Quick Start
-TODO
+* Built with Python 3 (FastAPI) and JavaScript (VueJS)
+* Generate parameterized class schedules.
+* Quick links to RateMyProfessor and [assist.org](https://assist.org/).
+* Reliable access even with heavy loads.
 
 ## Installation
-TODO
+Ensure that you have the latest version of [Python 3](https://www.python.org/downloads/).
+
+* `pip install -r requirements.txt`
+* `python sundial.py`
 
 ## Troubleshooting
 sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant

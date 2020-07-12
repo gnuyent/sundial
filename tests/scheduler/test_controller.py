@@ -1,7 +1,8 @@
-from sundial.scheduler.controller import Controller
-from sundial.scheduler.period import Day
-from sundial.scheduler.parameters import Parameters
 from datetime import time
+
+from sundial.scheduler.controller import Controller
+from sundial.scheduler.parameters import Parameters
+from sundial.scheduler.period import Day
 
 
 class TestController:
