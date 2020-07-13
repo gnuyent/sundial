@@ -18,7 +18,6 @@
 <div align="center">
     <h4>
         <a href="#features">Features</a> |
-        <a href="#quick-start">Quick Start</a> |
         <a href="#installation">Installation</a> |
         <a href="#troubleshooting">Troubleshooting</a>
     </h4>
@@ -42,7 +41,8 @@ is built for speed and extensibility. It's quick, just like telling time.
 Ensure that you have the latest version of [Python 3](https://www.python.org/downloads/).
 
 * `pip install .`
-* `python sundial.py`
+* `cd sundial/`
+* `uvicorn main:app`
 
 ## Troubleshooting
 sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant
