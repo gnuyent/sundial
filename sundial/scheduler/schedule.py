@@ -7,8 +7,7 @@ from sundial.scheduler.period import DateTime, Day
 
 
 class Schedule:
-    """
-    Schedule retains information that will eventually be processed.
+    """Schedule retains information that will eventually be processed.
 
     Parameters
     ----------
@@ -25,11 +24,11 @@ class Schedule:
         self.fitness: int = fitness
 
     def __lt__(self, other):
+        """True if self.fitness < other.fitness, otherwise False."""  # noqa: D401
         return self.fitness < other.fitness
 
     def is_valid(self) -> bool:
-        """
-        Determine if the current schedule does not have overlapping times.
+        """Determine if the current schedule does not have overlapping times.
 
         Returns
         -------
@@ -71,8 +70,7 @@ class Schedule:
         return True
 
     def calculate_fitness(self, schedule_parameters: Parameters):
-        """
-        Modify the schedule's fitness based on different parameters.
+        """Modify the schedule's fitness based on different parameters.
 
         Uses the given schedule parameters as inputs to calculate the schedule's
         fitness.
@@ -90,8 +88,7 @@ class Schedule:
             self.waitlist()
 
     def avoid_day(self, bad_days: List[Day]):
-        """
-        Modify the current schedule's fitness if it contains a day that the user wants avoided.  # noqa: D400, E501
+        """Modify the current schedule's fitness if it contains a day that the user wants avoided.  # noqa: D400, E501
 
         Parameters
         ----------

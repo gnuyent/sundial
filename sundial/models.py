@@ -5,6 +5,8 @@ from sundial.database import Base
 
 
 class Course(Base):
+    """SQLAlchemy model for the course table."""
+
     __tablename__ = "course"
 
     id = Column("id", String(20), primary_key=True, sqlite_on_conflict_unique="REPLACE")
@@ -29,6 +31,8 @@ class Course(Base):
 
 
 class Meeting(Base):
+    """SQLAlchemy model for the meeting table."""
+
     __tablename__ = "meeting"
 
     course_id = Column("course_id", String(20), ForeignKey("course.id"))
@@ -41,6 +45,8 @@ class Meeting(Base):
 
 
 class Footnote(Base):
+    """SQLAlchemy model for the footnote table."""
+
     __tablename__ = "footnote"
 
     course_id = Column("course_id", String(20), ForeignKey("course.id"))

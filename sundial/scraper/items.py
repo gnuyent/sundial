@@ -8,6 +8,8 @@ import scrapy
 
 
 class CourseItem(scrapy.Item):
+    """Scrapy item schema."""
+
     id = scrapy.Field()
     url = scrapy.Field()
     period = scrapy.Field()

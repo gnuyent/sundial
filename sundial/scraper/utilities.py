@@ -5,11 +5,21 @@ import re
 
 
 def clean(bloat, standard_length):
-    """
-    Cleans up unnecessary data from course information.
-    :param standard_length: Number of meetings so all lists are the same length
-    :param bloat: Array of "dirty" strings to cleanup
-    :return: Cleaned array of Strings.
+    """Clean up unnecessary data from course information.
+
+    Data cannot be cleanly parsed due to whitespace, unnecessary characters, etc. This function removes unnecessary noise from strings. # noqa: E501
+
+    Parameters
+    ----------
+    bloat : List[str]
+        List of "dirty" strings to cleanup.
+    standard_length : int
+        Number of meetings so all lists are the same length.
+
+    Returns
+    -------
+    List[str]
+        Cleaned list of strings.
     """
     for i, item in enumerate(bloat):  # Remove all angled brackets and text within them
         bloat[i] = re.sub(r"<(.*?)>", "", bloat[i])
@@ -23,14 +33,21 @@ def clean(bloat, standard_length):
 
 
 def parse_meetings(sel):
+    """Parse meetings from a scrapy selector.
+
+    Parameters
+    ----------
+    sel
+        Selector to generate meetings over.
+    """
     keys = ["types", "times", "days", "locations", "instructors"]
     meetings = {key: [] for key in keys}
+    # Some courses have courses that link to other courses, therefore we filter explicitly here. # noqa: E501
     meeting_count = len(sel.xpath('.//div[@class="sectionFieldType column"]'))
-    # Filter by table to reduce extraneous information from classes that are HEADS of sections # noqa: E501
     for parameter in ["Type", "Time", "Day", "Location", "Instructor"]:
         search_string = f'.//div[@class="sectionField{parameter} column"]//text()'
         meeting_item = sel.xpath(search_string)
-        # Create an empty string if column does not exist and remove html formatting
+        # Create an empty string if column does not exist and remove html formatting.
         try:
             meeting_item = clean(meeting_item.getall(), meeting_count)
         except KeyError:
@@ -44,6 +61,13 @@ def parse_meetings(sel):
 
 
 def parse_footnotes(sel):
+    """Parse footnotes from a scrapy selector.
+
+    Parameters
+    ----------
+    sel :
+        Selector to generate footnotes over.
+    """
     footnotes = {}
     footnote_codes = clean(
         sel.xpath('.//div[@class="footnoteCode column"]').getall(), True

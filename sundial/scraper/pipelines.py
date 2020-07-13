@@ -5,27 +5,22 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker
 
-from sundial.scraper.models import Course, Footnote, Meeting, create_table, db_connect
+from sundial.database import SessionLocal, create_table, engine
+from sundial.models import Course, Footnote, Meeting
 
 
 class ScraperDatabasePipeline:
+    """Pipeline for inserting scrapy items into the database."""
+
     def __init__(self):
-        """
-        Initializes database connection and sessionmaker
-        Creates tables
-        """
-        engine = db_connect()
+        """Connect to database and create tables."""
         create_table(engine)
-        self.Session = sessionmaker(bind=engine)
+        self.session = SessionLocal
 
     def process_item(self, item, spider):
-        """
-        Processes courses, meetings, and footnotes and saves into the database. Called once per item. # noqa: E501
-        """
-        session = self.Session()
-        session.query(item["id"])
+        """Process courses, meetings, and footnotes and save into the database. Called once per item."""  # noqa: D400, E501
+        session = self.session()
         course = Course()
         course.id = item["id"]
         course.url = item["url"]
@@ -43,23 +38,23 @@ class ScraperDatabasePipeline:
         try:
             course.description = item["description"]
         except KeyError:
-            course.description = ""
+            course.description = None
         try:
             course.course_hours = item["course_hours"]
         except KeyError:
-            course.course_hours = ""
+            course.course_hours = None
         try:
             course.prerequisite = item["prerequisite"]
         except KeyError:
-            course.prerequisite = ""
+            course.prerequisite = None
         try:
             course.statement = item["statement"]
         except KeyError:
-            course.statement = ""
+            course.statement = None
         try:
             course.general_text = item["general_text"]
         except KeyError:
-            course.general_text = ""
+            course.general_text = None
 
         # Insert meetings
         meeting_counter = 1

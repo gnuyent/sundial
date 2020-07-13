@@ -87,9 +87,11 @@ class DateTime:
         self.end = end
 
     def __lt__(self, other):
+        """True if self.start < other.start, False otherwise."""  # noqa: D401
         return self.start < other.start
 
     def __repr__(self):
+        """Display start time, end time, and day."""
         start_time = str(self.start.isoformat(timespec="minutes"))
         end_time = str(self.end.isoformat(timespec="minutes"))
         out_string = f"{self.day.name} {start_time}-{end_time}"

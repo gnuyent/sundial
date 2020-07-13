@@ -90,6 +90,21 @@ class Controller:
         return all_courses
 
     def generate_meetings(self, course_id: str) -> Tuple[List[Meeting], bool]:
+        """
+        Generate Meeting objects for every meeting matching the course id.
+
+        Parameters
+        ----------
+        course_id : str
+            The course id to search meetings for.
+
+        Returns
+        -------
+        List[Course]
+            List of all meetings matching the given course id.
+        bool
+            True if meetings overlap, False otherwise.
+        """
         all_meetings = []
         meetings = (
             self.db.query(
@@ -115,14 +130,25 @@ class Controller:
         return all_meetings, overlaps
 
     def best_schedule(self) -> Schedule:
-        [
-            schedule.calculate_fitness(self.schedule_parameters)
-            for schedule in self.schedules
-        ]
-        self.schedules.sort(reverse=True)
-        return self.schedules[0]
+        """Determine the best schedule from the generated list.
+
+        Returns
+        -------
+        Schedule
+            Best schedule generated.
+        """
+        try:
+            [
+                schedule.calculate_fitness(self.schedule_parameters)
+                for schedule in self.schedules
+            ]
+            self.schedules.sort(reverse=True)
+            return self.schedules[0]
+        except IndexError:
+            raise RuntimeError("Could not determine best schedule.")
 
     def __str__(self):
+        """Format every schedule by calling their string representation."""
         output = ""
         for schedule in self.schedules:
             output += str(schedule) + "\n"

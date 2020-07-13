@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 
 class Course(BaseModel):
+    """Pydantic schema for the course table."""
+
     id: str
     url: str
     period: int
@@ -22,11 +24,13 @@ class Course(BaseModel):
     statement: Optional[str] = None
     general_text: Optional[str] = None
 
-    class Config:
+    class Config:  # noqa: D106
         orm_mode = True
 
 
 class Meeting(BaseModel):
+    """Pydantic schema for the meeting table."""
+
     course_id: str
     meeting_id: str
     meeting_type: str
@@ -35,11 +39,13 @@ class Meeting(BaseModel):
     location: str
     instructor: str
 
-    class Config:
+    class Config:  # noqa: D106
         orm_mode = True
 
 
 class ScheduleParameters(BaseModel):
+    """Pydantic schema for the Parameters object."""
+
     # Do optional blocks
     around_time: str = "0000"
     bad_day: str = ""

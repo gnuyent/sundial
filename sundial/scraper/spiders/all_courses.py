@@ -8,18 +8,26 @@ from sundial.scraper.utilities import clean, parse_footnotes, parse_meetings
 
 
 class AllCoursesSpider(scrapy.Spider):
+    """Generate initial database with complete data.
+
+    AllCoursesSpider builds the database by executing a complete scrape over the scheduling website. It determines the period during the year by the parameter it is passed. # noqa: E501
+
+    Parameters
+    ----------
+    year: int
+        The year to scrape from formatted in <YYYY>.
+        (default: 2020)
+    season : int
+        The season within the year to scrape from. 2 = Spring. 3 = Summer. 4 = Fall.
+        (default: 4)
+    """
+
     name = "allcourses"
     allowed_domains = ["sunspot.sdsu.edu"]
 
-    def __init__(self, period="20204", **kwargs):
-        """
-        Initializes the start url with a given period to scrape.
-        :param period: Default is 20204 - Fall 2020. The correct format will be <YYYY><2-4>. # noqa: E501
-        2 is Spring. 3 is Summer. 4 is Fall.
-        """
-        semester = int(str(period)[-1])
-        if semester < 2 or semester > 4:
-            raise ValueError("Invalid period provided.")
+    def __init__(self, period: int = 2020, season: int = 4, **kwargs):
+        if not 2 <= season <= 4:
+            raise ValueError(f"{season} is not between 2 and 4.")
         self.start_urls = [
             f"https://sunspot.sdsu.edu/schedule/search?mode=browse_by_subject&category=browse_by_subject"  # noqa: E501
             f"&period={period}"
@@ -28,11 +36,22 @@ class AllCoursesSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def process_value(self, value):
+        """Retrieve the correct link by appending the period.
+
+        Parameters
+        ----------
+        value
+            Link to append to.
+        """
         return value + f"&period={self.period}"
 
     def parse(self, response):
-        """
-        Scrapes links to each subject
+        """Scrape links to each subject.
+
+        Parameters
+        ----------
+        response
+            All subjects list to generate individual subject links over.
         """
         subject_links = LinkExtractor(
             process_value=self.process_value,
@@ -41,8 +60,12 @@ class AllCoursesSpider(scrapy.Spider):
         yield from response.follow_all(subject_links, self.scrape_course_links)
 
     def scrape_course_links(self, response):
-        """
-        Scrapes links to each course
+        """Scrape links to each course.
+
+        Parameters
+        ----------
+        response
+            All courses list to generate individual course links over.
         """
         course_links = LinkExtractor(
             restrict_xpaths='.//div[@class="sectionFieldCourse column"]/a'
@@ -52,8 +75,12 @@ class AllCoursesSpider(scrapy.Spider):
         yield from response.follow_all(course_links, self.parse_course_information)
 
     def parse_course_information(self, response):
-        """
-        Parses course information
+        """Parse course information into scrapy item.
+
+        Parameters
+        ----------
+        response
+            Course response to parse over.
         """
         sel = Selector(response)
         course_labels = sel.xpath('.//td[@class="sectionDetailLabel"]/text()').getall()
