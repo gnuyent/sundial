@@ -29,13 +29,12 @@
 </div>
 <br>
 
-Sundial is a wrapper for San Diego State University's class scheduler with added features. Sundial
-is built for speed and extensibility. It's quick, just like telling time.
+Sundial is an API wrapper for San Diego State University's class scheduler with added features. Sundial
+is feature built for speed and extensibility. It's quick, just like telling time.
 
 ## Features
 * RESTful API access.
 * Generates parameterized class schedules.
-* Quick links to RateMyProfessor and [assist.org](https://assist.org/).
 
 ## Installation
 Ensure that you have the latest version of [Python 3](https://www.python.org/downloads/).
