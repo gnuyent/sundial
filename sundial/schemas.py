@@ -46,13 +46,16 @@ class Meeting(BaseModel):
 class ScheduleParameters(BaseModel):
     """Pydantic schema for the Parameters object."""
 
-    # Do optional blocks
-    around_time: str = "0000"
-    bad_day: str = ""
-    earliest_time: str = "0000"
-    include_courses: List[int] = []
-    include_professors: List[str] = []
-    latest_time: str = "0000"
-    maximum_time_distance: int = 0
-    prefer_no_waitlist: bool = True
-    course_list: List[str]
+    around_time: Optional[str] = "0000"
+    bad_day: Optional[str] = ""
+    earliest_time: Optional[str] = "0000"
+    include_courses: Optional[List[int]] = []
+    include_professors: Optional[List[str]] = []
+    latest_time: Optional[str] = "0000"
+    maximum_time_distance: Optional[int] = 0
+    prefer_no_waitlist: Optional[bool] = True
+    course_list: Optional[List[str]] = []
+
+
+class ScheduleList(BaseModel):
+    schedules: List[List[Course]] = [[Course]]
