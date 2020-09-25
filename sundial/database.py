@@ -5,7 +5,8 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-path = os.path.dirname(os.path.abspath(__file__))
+path = os.path.dirname(os.path.realpath(__file__))
+path = os.getcwd()
 SQLALCHEMY_DATABASE_URL = "sqlite:///" + path + "/classes.db"
 print(SQLALCHEMY_DATABASE_URL)
 

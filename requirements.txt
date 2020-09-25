@@ -1,0 +1,4 @@
+SQLAlchemy
+Scrapy
+fastapi
+uvicorn
