@@ -1,111 +1,109 @@
-use crate::meeting::Meeting;
-use sqlx::FromRow;
-use std::collections::HashMap;
+use crate::datetime::DateTime;
+use crate::structures::Meeting;
 
-/// `Course` is a correctly parsed and formatted version of `SqlCourse`.
-#[derive(Clone, Debug)]
+/// A data structure holding course information which matches the corresponding database table.
+#[derive(Debug, Default)]
 pub struct Course {
-    pub course_hours: String,
-    pub course_title: String,
+    /// Abbreviation and number of the course (e.g. A E-100)
     pub course: String,
-    pub description: String,
-    pub footnotes: HashMap<String, String>,
-    pub full_title: String,
-    pub general_text: String,
+    /// Unique ID for the course.
     pub id: String,
+    /// Vector containing every meeting that the course has.
     pub meetings: Vec<Meeting>,
-    pub period: u16,
-    pub prerequisite: String,
+    /// True if meeting has overlapping times, False otherwise. This value determines what time to
+    /// use in calculating schedule overlap.
+    pub overlaps: bool,
+    /// Official schedule number according to the course catalog.
     pub schedule_num: u16,
-    pub seats_available: i32,
-    pub seats_open: i32,
-    pub section: u8,
-    pub session: String,
-    pub statement: String,
-    pub units: f32,
-    pub url: String,
+    /// Maximum possible seats in the course.
+    pub seats_total: u32,
+    /// Available seats in the course.
+    pub seats_available: u32,
+    /// True if course is waitlisted (`seats_available == 0`), False otherwise.
     pub waitlist: bool,
 }
 
-impl Default for Course {
-    fn default() -> Self {
+impl Course {
+    /// Creates a new [Course] instance.
+    pub fn new(
+        course: String,
+        id: String,
+        meetings: Vec<Meeting>,
+        overlaps: bool,
+        schedule_num: u16,
+        seats_total: u32,
+        seats_available: u32,
+        waitlist: bool,
+    ) -> Course {
         Course {
-            course_hours: String::from(""),
-            course_title: String::from(""),
-            course: String::from(""),
-            description: String::from(""),
-            footnotes: HashMap::new(),
-            full_title: String::from(""),
-            general_text: String::from(""),
-            id: String::from(""),
-            meetings: vec![Meeting::default()],
-            period: 0,
-            prerequisite: String::from(""),
-            schedule_num: 0,
-            seats_available: 0,
-            seats_open: 0,
-            section: 0,
-            session: String::from(""),
-            statement: String::from(""),
-            units: 0.0,
-            url: String::from(""),
-            waitlist: true,
+            course,
+            id,
+            meetings,
+            overlaps,
+            schedule_num,
+            seats_total,
+            seats_available,
+            waitlist,
         }
+    }
+
+    /// Calculates the longest time in an overlapping scenario.
+    ///
+    /// Some courses contain times that are overlapping (e.g. Monday 0800-0850, Monday 0800-0950).
+    /// In this case, we want to determine what the largest is difference between all time ranges
+    /// that overlap. From the previous example, this would be condensed to Monday 0800-0950.
+    pub fn get_longest_overlap(self) -> DateTime {
+        let times: Vec<DateTime> = self
+            .meetings
+            .iter()
+            .map(|x| x.date)
+            .collect::<Vec<DateTime>>();
+
+        let mut highest_idx = 0;
+        let mut highest_diff = 0;
+
+        for (idx, meeting) in times.iter().enumerate() {
+            let start = meeting.start_time;
+            let end = meeting.end_time;
+            let difference = (end - start).whole_seconds();
+            if difference > highest_diff {
+                highest_diff = difference;
+                highest_idx = idx;
+            }
+        }
+        self.meetings[highest_idx].date
     }
 }
 
-/// `SqlCourse` directly corresponds to the database and allows for immediate extraction from
-/// queries.
-#[derive(FromRow)]
-pub struct SqlCourse {
-    pub course_hours: String,
-    pub course_title: String,
-    pub course: String,
-    pub description: String,
-    pub full_title: String,
-    pub general_text: String,
-    pub id: String,
-    pub period: i32,
-    pub prerequisite: String,
-    pub schedule_num: i32,
-    pub seats_available: i32,
-    pub seats_open: i32,
-    pub section: i32,
-    pub session: String,
-    pub statement: String,
-    pub units: f32,
-    pub url: String,
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::day::Day;
+    use time::Time;
 
-impl SqlCourse {
-    pub fn into_course(
-        original: Self,
-        footnotes: HashMap<String, String>,
-        meetings: Vec<Meeting>,
-    ) -> Course {
-        let waitlist = original.seats_open == 0; // all seats are taken
-
-        Course {
-            course_hours: original.course_hours,
-            course_title: original.course_title,
-            course: original.course,
-            description: original.description,
-            footnotes,
-            full_title: original.full_title,
-            general_text: original.general_text,
-            id: original.id,
-            meetings,
-            period: original.period as u16,
-            prerequisite: original.prerequisite,
-            schedule_num: original.schedule_num as u16,
-            seats_available: original.seats_available,
-            seats_open: original.seats_open,
-            section: original.section as u8,
-            session: original.session,
-            statement: original.statement,
-            units: original.units,
-            url: original.url,
-            waitlist,
-        }
+    #[test]
+    fn day_overlap() {
+        let start_time = Time::try_from_hms(8, 0, 0).unwrap();
+        let end_time_one = Time::try_from_hms(8, 50, 0).unwrap();
+        let end_time_two = Time::try_from_hms(9, 50, 0).unwrap();
+        let meeting_one = Meeting::new(
+            DateTime::new(Day::Monday, start_time, end_time_one),
+            String::from("A"),
+        );
+        let meeting_two = Meeting::new(
+            DateTime::new(Day::Monday, start_time, end_time_two),
+            String::from("B"),
+        );
+        let mut course = Course::default();
+        course.meetings.push(meeting_one);
+        course.meetings.push(meeting_two);
+        assert_eq!(
+            DateTime::new(
+                Day::Monday,
+                Time::try_from_hms(8, 0, 0).unwrap(),
+                Time::try_from_hms(9, 50, 0).unwrap()
+            ),
+            course.get_longest_overlap()
+        );
     }
 }

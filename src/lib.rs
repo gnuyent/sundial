@@ -1,0 +1,10 @@
+pub use crate::course::Course;
+pub use crate::datetime::DateTime;
+pub use crate::day::Day;
+pub use crate::schedule::Schedule;
+pub use crate::structures::{Meeting, Parameters};
+mod course;
+mod datetime;
+mod day;
+mod schedule;
+mod structures;

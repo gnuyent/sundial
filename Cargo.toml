@@ -1,6 +1,6 @@
 [package]
 name = "sundial"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Brandon Nguyen <gnuyent@protonmail.com>"]
 edition = "2018"
 
@@ -8,9 +8,5 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1.0"
-futures = "0.3"
-itertools = "0.9"
-sqlx = { version = "0.3", default-features = false, features = [ "runtime-tokio", "macros", "sqlite", "time" ] }
 time = "0.2"
-tokio = { version = "0.2", features = ["macros"] }
-warp = "0.2"
+tokio = {version = "0.2", features = ["full"]}
