@@ -1,8 +1,8 @@
 use crate::datetime::DateTime;
-use crate::structures::Meeting;
+use std::collections::HashMap;
 
 /// A data structure holding course information which matches the corresponding database table.
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Course {
     /// Abbreviation and number of the course (e.g. A E-100)
     pub course: String,
@@ -14,36 +14,43 @@ pub struct Course {
     /// use in calculating schedule overlap.
     pub overlaps: bool,
     /// Official schedule number according to the course catalog.
-    pub schedule_num: u16,
+    pub schedule_num: i32,
     /// Maximum possible seats in the course.
-    pub seats_total: u32,
+    pub seats_total: i32,
     /// Available seats in the course.
-    pub seats_available: u32,
+    pub seats_available: i32,
     /// True if course is waitlisted (`seats_available == 0`), False otherwise.
     pub waitlist: bool,
 }
 
 impl Course {
     /// Creates a new [Course] instance.
-    pub fn new(
-        course: String,
-        id: String,
-        meetings: Vec<Meeting>,
-        overlaps: bool,
-        schedule_num: u16,
-        seats_total: u32,
-        seats_available: u32,
-        waitlist: bool,
-    ) -> Course {
+    pub fn new(data_map: HashMap<&str, &str>) -> Course {
+        let mut seats_available: i32 = 0;
+        let mut seats_total: i32 = 0;
+        match data_map.get("Seats") {
+            Some(seats) => {
+                let mut seats = seats.splitn(2, "/");
+                seats_available = seats.next().unwrap().to_string().parse().unwrap();
+                seats_total = seats.next().unwrap().to_string().parse().unwrap();
+            }
+            None => println!("WARN: Unable to determine waitlist availability."),
+        }
+
         Course {
-            course,
-            id,
-            meetings,
-            overlaps,
-            schedule_num,
+            course: data_map.get("Course").unwrap().to_string(),
+            id: "1".to_string(),
+            meetings: vec![],
+            overlaps: false,
+            schedule_num: data_map
+                .get("Schedule #")
+                .unwrap()
+                .to_string()
+                .parse()
+                .unwrap_or(0),
             seats_total,
             seats_available,
-            waitlist,
+            waitlist: false,
         }
     }
 
@@ -52,7 +59,7 @@ impl Course {
     /// Some courses contain times that are overlapping (e.g. Monday 0800-0850, Monday 0800-0950).
     /// In this case, we want to determine what the largest is difference between all time ranges
     /// that overlap. From the previous example, this would be condensed to Monday 0800-0950.
-    pub fn get_longest_overlap(self) -> DateTime {
+    pub fn get_longest_overlap(&self) -> DateTime {
         let times: Vec<DateTime> = self
             .meetings
             .iter()
@@ -75,10 +82,26 @@ impl Course {
     }
 }
 
+/// A data structure holding meeting information which matches the corresponding database table.
+#[derive(Clone, Debug)]
+pub struct Meeting {
+    /// Date that the meeting occurs on.
+    pub date: DateTime,
+    /// Unique ID of the meeting.
+    pub meeting_id: String,
+}
+
+impl Meeting {
+    /// Creates a new [Meeting] instance.
+    pub fn new(date: DateTime, meeting_id: String) -> Meeting {
+        Meeting { date, meeting_id }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::day::Day;
+    use crate::datetime::Day;
     use time::Time;
 
     #[test]
