@@ -1,4 +1,7 @@
 use crate::datetime::DateTime;
+use anyhow::Result;
+use itertools::izip;
+use scraper::{Html, Selector};
 use std::collections::HashMap;
 
 /// A data structure holding course information which matches the corresponding database table.
@@ -87,14 +90,47 @@ impl Course {
 pub struct Meeting {
     /// Date that the meeting occurs on.
     pub date: DateTime,
-    /// Unique ID of the meeting.
-    pub meeting_id: String,
+    /// Type of class meeting.
+    pub mtype: String,
 }
 
 impl Meeting {
     /// Creates a new [Meeting] instance.
-    pub fn new(date: DateTime, meeting_id: String) -> Meeting {
-        Meeting { date, meeting_id }
+    pub fn new(mtype: &str, time_range: &str, day: &str, location: &str, instructor: &str) -> Meeting {
+        let (start, end) = DateTime::parse_time(time_range).unwrap();
+        DateTime::new();
+        Meeting { date, mtype, }
+    }
+
+    /// Generates a vector of meetings from a given URL.
+    pub fn from_url(course_url: &str, course_id: &str) -> Result<Vec<Meeting>> {
+        let response = reqwest::blocking::get(course_url)?.text()?;
+        let fragment = Html::parse_fragment(&response);
+
+        let meeting_type = Selector::parse(".sectionFieldType").unwrap();
+        let meeting_time = Selector::parse(".sectionFieldTime").unwrap();
+        let meeting_day = Selector::parse(".sectionFieldDay").unwrap();
+        let meeting_loc = Selector::parse(".sectionFieldLocation").unwrap();
+        let meeting_instr = Selector::parse(".sectionFieldInstructor > a").unwrap();
+
+        let mut meetings = Vec::new();
+        for (_type, _time, _day, _loc, _instr) in izip!(
+            fragment.select(&meeting_type),
+            fragment.select(&meeting_time),
+            fragment.select(&meeting_day),
+            fragment.select(&meeting_loc),
+            fragment.select(&meeting_instr),
+        ) {
+            let _type = _type.text().next().unwrap().trim();
+            let _time = _time.text().next().unwrap().trim();
+            let _day = _day.text().next().unwrap().trim();
+            let _loc = _loc.text().next().unwrap().trim();
+            let _instr = _instr.text().next().unwrap().trim();
+            info!("Parsed meeting {} {} {} {} {}", _type, _time, _day, _loc, _instr);
+            meetings.push(value);
+        }
+
+        Ok(vec![])
     }
 }
 

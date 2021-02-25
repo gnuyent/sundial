@@ -2,7 +2,6 @@ use crate::course::Course;
 use anyhow::{anyhow, Result};
 use scraper::{Html, Selector};
 use std::collections::HashMap;
-use tinyvec::*;
 
 const BASE_URL: &str = "https://sunspot.sdsu.edu";
 
@@ -85,13 +84,17 @@ fn parse_single_course(course_url: &str) -> Result<Course> {
     let response = reqwest::blocking::get(course_url)?.text()?;
     let fragment = Html::parse_fragment(&response);
 
-    let label_selector = Selector::parse("td.sectionDetailLabel").unwrap();
-    let label_selector = fragment.select(&label_selector);
-    let content_selector = Selector::parse("td.sectionDetailContent").unwrap();
-    let content_selector = fragment.select(&content_selector);
+    //let label_selector = fragment.select(&Selector::parse("td.sectionDetailLabel").unwrap());
+    //let content_selector = fragment.select(&Selector::parse("td.sectionDetailContent").unwrap());
 
+    let label_selector = &Selector::parse("td.sectionDetailLabel").unwrap();
+    let content_selector = &Selector::parse("td.sectionDetailContent").unwrap();
+    //
     let mut course_details: HashMap<&str, &str> = HashMap::new();
-    for (label, content) in label_selector.zip(content_selector) {
+    for (label, content) in fragment
+        .select(&label_selector)
+        .zip(fragment.select(&content_selector))
+    {
         let label = label.text().next().unwrap();
         let content = content.text().next().unwrap();
         course_details.insert(label, content);
