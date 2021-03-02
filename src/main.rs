@@ -1,25 +1,28 @@
 mod course;
 mod datetime;
 mod day;
+mod meeting;
 mod parameters;
 mod parser;
 mod schedule;
-use course::Course;
-use std::collections::HashMap;
+
 extern crate clap;
 use clap::Clap;
-use itertools::Itertools;
-use schedule::Schedule;
 
 #[macro_use]
 extern crate log;
 extern crate simplelog;
 
+use crate::course::Course;
+use crate::meeting::Meeting;
+use crate::schedule::Schedule;
+use itertools::Itertools;
 use simplelog::*;
+use std::collections::HashMap;
 
 /// An automatic class scheduler for San Diego State University.
 #[derive(Clap)]
-#[clap(version = "0.1.0", author = "Brandon N. <gnuyent@protonmail.com>")]
+#[clap(version = "0.1.0")]
 struct Opts {
     /// Sets a custom config file
     #[clap(
@@ -68,62 +71,86 @@ fn main() {
         }
     };
 
-    //let subject_urls: HashMap<String, String> = match parser::get_subject_urls(&params.period) {
-    //    Ok(s) => s,
-    //    Err(e) => {
-    //        error!("Unable to retrieve subject URLs. Did the website change?");
-    //        panic!("{}", e);
-    //    }
-    //};
+    let subject_urls: HashMap<String, String> = match parser::get_subject_urls(&params.period) {
+        Ok(s) => s,
+        Err(e) => {
+            error!("Unable to retrieve subject URLs. Did the website change?");
+            panic!("{}", e);
+        }
+    };
 
-    //let mut all_courses: Vec<Vec<Course>> = Vec::new();
+    let mut all_courses: Vec<Vec<Course>> = Vec::new();
 
-    //for course in params.courses.iter() {
-    //    match parser::parse_courses(&course, &params.period, &subject_urls) {
-    //        Ok(c) => {
-    //            all_courses.push(c);
-    //            info!("Successfully parsed {}.", course);
-    //        }
-    //        Err(e) => {
-    //            if params.skip_missing_courses {
-    //                warn!("Unable to parse courses for {}.", course);
-    //                continue;
-    //            } else {
-    //                error!("Parsing {} was unsuccessful.", course);
-    //                error!("Make sure that this course is available in the current season.");
-    //                panic!("{}", e);
-    //            }
-    //        }
-    //    };
-    //}
+    for course in params.courses.iter() {
+        match parser::parse_courses(&course, &params.period, &subject_urls) {
+            Ok(c) => {
+                all_courses.push(c);
+                info!("Parsed {}.", course);
+            }
+            Err(e) => {
+                if params.skip_missing_courses {
+                    warn!("Unable to parse courses for {}.", course);
+                    continue;
+                } else {
+                    error!("Parsing {} was unsuccessful.", course);
+                    error!("Make sure that this course is available in the current season.");
+                    panic!("{}", e);
+                }
+            }
+        };
+    }
 
-    course::Meeting::from_url("https://sunspot.sdsu.edu/schedule/sectiondetails?scheduleNumber=21127&period=20212&admin_unit=R").unwrap();
+    Meeting::from_url("https://sunspot.sdsu.edu/schedule/sectiondetails?scheduleNumber=21127&period=20212&admin_unit=R").unwrap();
 
-    //info!("Generating schedules...");
-    //let schedules_raw = all_courses
-    //    .into_iter()
-    //    .map(IntoIterator::into_iter)
-    //    .multi_cartesian_product()
-    //    .collect_vec();
+    info!("Generating schedules...");
+    let schedules_raw = all_courses
+        .into_iter()
+        .map(IntoIterator::into_iter)
+        .multi_cartesian_product()
+        .collect_vec();
 
-    //info!("Generated {} schedules.", schedules_raw.len());
+    info!("Generated {} schedules.", schedules_raw.len());
 
-    //let mut schedules: Vec<Schedule> = Vec::new();
+    let mut schedules: Vec<Schedule> = Vec::new();
 
-    //let mut discard_counter: i32 = 0;
+    let mut discard_counter: i32 = 0;
 
-    //for schedule in schedules_raw {
-    //    let mut s = Schedule::new(schedule);
-    //    if s.is_valid() {
-    //        s.calculate_fitness(&params);
-    //        schedules.push(s);
-    //    } else {
-    //        discard_counter += 1;
-    //    }
-    //}
+    for schedule in schedules_raw {
+        let mut s = Schedule::new(schedule);
+        if s.is_valid() {
+            s.calculate_fitness(&params);
+            schedules.push(s);
+        } else {
+            discard_counter += 1;
+        }
+    }
 
-    //info!("Validated {} schedules.", schedules.len());
-    //info!("Discarded {} schedules.", discard_counter);
+    info!("Validated {} schedules.", schedules.len());
+    info!("Discarded {} schedules.", discard_counter);
 
-    //println!("{:#?}", schedules);
+    schedules.sort_by(|s1, s2| s1.fitness.cmp(&s2.fitness));
+
+    for course in &schedules[schedules.len() - 1].courses {
+        println!(
+            "Course: {} ({}) - {}",
+            course.course, course.schedule_num, course.url
+        );
+        for meeting in course.meetings.iter() {
+            println!(
+                "    This is a {} taught by {} {} on {:?} between {}{}-{}{}.",
+                meeting.mtype,
+                meeting.instructor,
+                meeting.location,
+                meeting.date.day,
+                meeting.date.start_time.hour(),
+                meeting.date.start_time.minute(),
+                meeting.date.end_time.hour(),
+                meeting.date.end_time.minute(),
+            );
+        }
+        println!(
+            "    There are {}/{} seats available.\n",
+            course.seats_available, course.seats_total
+        );
+    }
 }

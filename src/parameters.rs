@@ -61,6 +61,7 @@ impl Parameters {
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
         let mut raw: RawParameters = toml::from_str(&contents).unwrap();
+
         let mut period = raw.period.split_whitespace();
         let season = period.next();
         let year = period.next();
@@ -69,6 +70,7 @@ impl Parameters {
             (Some(season), Some(year)) => (season, year),
             _ => return Err(anyhow!("Unable to parse period {}.", raw.period)),
         };
+
         let period = match season {
             "Spring" => format!("{}2", year),
             "Summer" => format!("{}3", year),
@@ -81,12 +83,15 @@ impl Parameters {
             }
         };
 
+        // Minutes -> Seconds
         raw.maximum_time_distance *= 60;
+        // Wrap seconds to total seconds in day
         raw.maximum_time_distance %= 82340;
-        let around_time: Time = DateTime::parse_single_time(raw.around_time)?;
+
+        let around_time: Time = DateTime::parse_single_time(&raw.around_time)?;
         let bad_days: Vec<Day> = Day::parse_days(&raw.bad_days);
-        let earliest_time: Time = DateTime::parse_single_time(raw.earliest_time)?;
-        let latest_time: Time = DateTime::parse_single_time(raw.latest_time)?;
+        let earliest_time: Time = DateTime::parse_single_time(&raw.earliest_time)?;
+        let latest_time: Time = DateTime::parse_single_time(&raw.latest_time)?;
 
         Ok(Self {
             period,

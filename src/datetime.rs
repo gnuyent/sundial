@@ -1,5 +1,5 @@
 use crate::day::Day;
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use std::cmp::Ordering;
 use time::Time;
 
@@ -54,7 +54,7 @@ impl DateTime {
     /// let time_string: String = "-0001".to_string();
     /// assert!(parse_single_time(time_string).is_err());
     /// ```
-    pub fn parse_single_time(time_string: String) -> Result<Time> {
+    pub fn parse_single_time(time_string: &str) -> Result<Time> {
         // TODO: Make minimums possible.
         let (hour, minute) = time_string.split_at(2);
         Ok(Time::try_from_hms(
@@ -67,14 +67,27 @@ impl DateTime {
     /// Generates a tuple of two [Time] objects from a valid range time string.
     ///
     /// A range time string is defined as a [String] in `HHMM-HHMM` format.
-    pub fn parse_time(range_string: String) -> Result<(Time, Time)> {
-        let (left_side, right_side) = range_string.split_at(4);
+    pub fn parse_time(range_string: &str) -> Result<(Time, Time)> {
+        let mut range = range_string.split("-");
 
-        let start_time = DateTime::parse_single_time(left_side.to_string())?;
+        if range_string == "" {
+            return Err(anyhow!("No time!"));
+        }
 
-        let end_time = DateTime::parse_single_time(right_side.to_string())?;
+        let left_side = range.next().unwrap();
+        let right_side = range.next().unwrap();
+
+        let start_time = DateTime::parse_single_time(left_side)?;
+        let end_time = DateTime::parse_single_time(right_side)?;
 
         Ok((start_time, end_time))
+    }
+
+    pub fn empty_time() -> (Time, Time) {
+        (
+            Time::try_from_hms(0, 0, 0).unwrap(),
+            Time::try_from_hms(0, 0, 0).unwrap(),
+        )
     }
 }
 
@@ -86,26 +99,26 @@ mod tests {
     #[test]
     fn parse_valid_times() {
         assert_eq!(
-            DateTime::parse_single_time("0540".to_string()).unwrap(),
+            DateTime::parse_single_time("0540").unwrap(),
             Time::try_from_hms(5, 40, 0).unwrap()
         );
         assert_eq!(
-            DateTime::parse_single_time("1315".to_string()).unwrap(),
+            DateTime::parse_single_time("1315").unwrap(),
             Time::try_from_hms(13, 15, 0).unwrap()
         );
     }
 
     #[test]
     fn parse_invalid_times() {
-        assert!(DateTime::parse_single_time("2400".to_string()).is_err());
-        assert!(DateTime::parse_single_time("-0001".to_string()).is_err());
+        assert!(DateTime::parse_single_time("2400").is_err());
+        assert!(DateTime::parse_single_time("-0001").is_err());
     }
 
     #[test]
     fn datetime_comparisons() {
         assert!(
-            DateTime::parse_single_time(String::from("2300")).unwrap()
-                < DateTime::parse_single_time(String::from("2359")).unwrap()
+            DateTime::parse_single_time("2300").unwrap()
+                < DateTime::parse_single_time("2359").unwrap()
         );
     }
 }

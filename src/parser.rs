@@ -1,4 +1,5 @@
 use crate::course::Course;
+use crate::meeting::Meeting;
 use anyhow::{anyhow, Result};
 use scraper::{Html, Selector};
 use std::collections::HashMap;
@@ -25,7 +26,9 @@ pub fn parse_courses(
     // 6 classes * 3 units per course = 18 units before allocating to heap
     let mut all_courses: Vec<Course> = Vec::new();
     for course_url in course_urls {
-        let course = parse_single_course(&course_url)?;
+        let mut course = Course::from_url(&course_url)?;
+        let meetings = Meeting::from_url(&course_url)?;
+        course.meetings = meetings;
         all_courses.push(course);
     }
 
@@ -51,11 +54,7 @@ pub fn get_subject_urls(period: &str) -> Result<HashMap<String, String>> {
         urls.insert(subject, subject_url);
     }
 
-    info!(
-        "Successfully found {} subjects for {}.",
-        urls.capacity(),
-        period
-    );
+    info!("Found {} subjects for {}.", urls.capacity(), period);
 
     Ok(urls)
 }
@@ -78,35 +77,4 @@ fn get_course_urls(course: &str, subject_url: &str, period: &str) -> Result<Vec<
     }
 
     Ok(course_urls)
-}
-
-fn parse_single_course(course_url: &str) -> Result<Course> {
-    let response = reqwest::blocking::get(course_url)?.text()?;
-    let fragment = Html::parse_fragment(&response);
-
-    //let label_selector = fragment.select(&Selector::parse("td.sectionDetailLabel").unwrap());
-    //let content_selector = fragment.select(&Selector::parse("td.sectionDetailContent").unwrap());
-
-    let label_selector = &Selector::parse("td.sectionDetailLabel").unwrap();
-    let content_selector = &Selector::parse("td.sectionDetailContent").unwrap();
-    //
-    let mut course_details: HashMap<&str, &str> = HashMap::new();
-    for (label, content) in fragment
-        .select(&label_selector)
-        .zip(fragment.select(&content_selector))
-    {
-        let label = label.text().next().unwrap();
-        let content = content.text().next().unwrap();
-        course_details.insert(label, content);
-    }
-
-    info!(
-        "Parsed {}-{} ({}) from {}.",
-        course_details.get("Course").unwrap(),
-        course_details.get("Section").unwrap(),
-        course_details.get("Schedule #").unwrap(),
-        course_url
-    );
-
-    Ok(Course::new(course_details))
 }

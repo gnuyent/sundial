@@ -10,7 +10,7 @@ use time::Time;
 #[derive(Debug, Default)]
 pub struct Schedule {
     /// List of all courses within this schedule.
-    courses: Vec<Course>,
+    pub courses: Vec<Course>,
     /// An integer representing how favorable this schedule is compared to all others.
     pub fitness: i32,
 }
@@ -117,6 +117,7 @@ impl Schedule {
     ///
     /// This method uses the given schedule parameters as inputs to calculate teh schedule's
     /// fitness.
+    /// TODO: Consider using a bitfield for conditions.
     pub fn calculate_fitness(&mut self, schedule_parameters: &Parameters) {
         self.fitness = 0; // reset to avoid undefined behavior
         self.avoid_day(&schedule_parameters.bad_days);
