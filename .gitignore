@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+#Added by cargo
+/target
+
+.nvimlog
+=======
 *$py.class
 *.egg
 *.egg-info/
@@ -32,3 +38,4 @@ share/python-wheels/
 var/
 venv/
 wheels/
+>>>>>>> master

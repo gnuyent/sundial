@@ -1,14 +1,14 @@
 <h1 align="center">
-    ⏰🌞 Sundial
+Sundial
 </h1>
 <h4 align="center">
     A class scheduler for <a href="https://www.sdsu.edu/">San Diego State University</a>.
 </h4>
 
 <p align="center">
-    <!-- Python Version -->
-    <a href="https://www.python.org/downloads/">
-        <img src="https://badgen.net/badge/python/3.8.3/?color=green" alt="Python Version" />
+    <!-- Rust Version -->
+    <a href="https://www.rust-lang.org/tools/install">
+        <img src="https://badgen.net/badge/rust/1.42+/?color=orange" alt="Rust Version" />
     </a>
     <a href="https://github.com/gnuyent/sundial/blob/master/LICENSE">
         <img src="https://badgen.net/badge/license/GPL2/orange" alt="License" />
@@ -24,24 +24,24 @@
 </div>
 
 <div align="center">
-    <sub>Built with ❤ by <a href="https://github.com/gnuyent">Brandon Nguyen</a>
+    <sub>Built with ❤ by <a href="https://github.com/gnuyent">Brandon N.</a>
     </sub>
 </div>
 <br>
 
-Sundial is an API wrapper for San Diego State University's class scheduler with added features. Sundial
-is feature built for speed and extensibility. It's quick, just like telling time.
+Sundial is a class scheduler for San Diego State University. Sundial is feature built for speed
+and extensibility. It's quick, just like telling time.
 
 ## Features
-* RESTful API access.
 * Generates parameterized class schedules.
 
 ## Installation
-Ensure that you have the latest version of [Python 3](https://www.python.org/downloads/).
+There are currently no automated builds for Rust. To install locally, make sure you have Rust and Cargo installed.
+Then, once inside the repository, run:
 
-* `pip install .`
-* `cd sundial/`
-* `uvicorn main:app`
+* `cargo build --release`
+
+Configure the `config.toml` file and then run the executable.
 
 ## Troubleshooting
 sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant
