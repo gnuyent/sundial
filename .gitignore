@@ -1,41 +1,4 @@
-<<<<<<< HEAD
 #Added by cargo
 /target
 
 .nvimlog
-=======
-*$py.class
-*.egg
-*.egg-info/
-*.py[cod]
-*.so
-.Python
-.eggs/
-.idea/
-.installed.cfg
-.mypy_cache/
-.pytest_cache/
-.scrapy
-.tox/
-.vscode/
-MANIFEST
-Session.vim
-__pycache__/
-build/
-classes*.db
-develop-eggs/
-dist/
-downloads/
-eggs/
-lib/
-lib64/
-parts/
-pip-delete-this-directory.txt
-pip-log.txt
-pip-wheel-metadata/
-sdist/
-share/python-wheels/
-var/
-venv/
-wheels/
->>>>>>> master
