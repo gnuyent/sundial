@@ -36,12 +36,11 @@ and extensibility. It's quick, just like telling time.
 * Generates parameterized class schedules.
 
 ## Installation
-There are currently no automated builds for Rust. To install locally, make sure you have Rust and Cargo installed.
-Then, once inside the repository, run:
+There are currently no automated builds for Rust.
 
-* `cargo build --release`
+To run locally, make sure you have Rust and Cargo installed. Then, once inside the repository, configure the `config.toml` file and run:
 
-Configure the `config.toml` file and then run the executable.
+* `cargo run --release`
 
 ## Troubleshooting
 sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant
@@ -53,5 +52,4 @@ sundial is licensed under the GPL2 license. Pull requests are welcome.
 sundial does not guarantee that you meet all the prerequisites to take a class. Always consult an academic counselor
 before registering for classes.
 
-This project is not affiliated with or endorsed by San Diego State University in any way. Be responsible when scraping
-or use the included database on the [releases](https://github.com/gnuyent/sundial/releases) page.
+This project is not affiliated with or endorsed by San Diego State University in any way. Be responsible when using.

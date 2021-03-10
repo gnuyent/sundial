@@ -17,7 +17,7 @@ earliest_time = "1000"
 # The latest time a class can be.
 latest_time = "1700"
 # Courses to include by name in SUBJ-NUM format. Ex: CS-370, RWS-305W
-# Make sure to keep the spaces in the name. Example: "A E" should stay the same.
+# Make sure to keep the spaces in the name. Ex: "A E" should stay the same.
 courses = [ "COMM-371", "CS-370", "CS-440", "CS-574", "RWS-305W" ]
 # True if a requested course isn't found in the schedule, false otherwise.
 skip_missing_courses = false

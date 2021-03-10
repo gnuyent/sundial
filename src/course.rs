@@ -123,33 +123,33 @@ impl Course {
 
 #[cfg(test)]
 mod tests {
-    //    use super::*;
-    //    use crate::day::Day;
-    //    use time::Time;
-    //
-    //    #[test]
-    //    fn day_overlap() {
-    //        let start_time = Time::try_from_hms(8, 0, 0).unwrap();
-    //        let end_time_one = Time::try_from_hms(8, 50, 0).unwrap();
-    //        let end_time_two = Time::try_from_hms(9, 50, 0).unwrap();
-    //        let meeting_one = Meeting::new(
-    //            DateTime::new(Day::Monday, start_time, end_time_one),
-    //            String::from("A"),
-    //        );
-    //        let meeting_two = Meeting::new(
-    //            DateTime::new(Day::Monday, start_time, end_time_two),
-    //            String::from("B"),
-    //        );
-    //        let mut course = Course::default();
-    //        course.meetings.push(meeting_one);
-    //        course.meetings.push(meeting_two);
-    //        assert_eq!(
-    //            DateTime::new(
-    //                Day::Monday,
-    //                Time::try_from_hms(8, 0, 0).unwrap(),
-    //                Time::try_from_hms(9, 50, 0).unwrap()
-    //            ),
-    //            course.get_longest_overlap()
-    //        );
-    //    }
+    use super::*;
+    use crate::day::Day;
+    use time::Time;
+
+    #[test]
+    fn day_overlap() {
+        let start_time = Time::try_from_hms(8, 0, 0).unwrap();
+        let end_time_one = Time::try_from_hms(8, 50, 0).unwrap();
+        let end_time_two = Time::try_from_hms(9, 50, 0).unwrap();
+        let meeting_one = Meeting::new(
+            DateTime::new(Day::Monday, start_time, end_time_one),
+            String::from("A"),
+        );
+        let meeting_two = Meeting::new(
+            DateTime::new(Day::Monday, start_time, end_time_two),
+            String::from("B"),
+        );
+        let mut course = Course::default();
+        course.meetings.push(meeting_one);
+        course.meetings.push(meeting_two);
+        assert_eq!(
+            DateTime::new(
+                Day::Monday,
+                Time::try_from_hms(8, 0, 0).unwrap(),
+                Time::try_from_hms(9, 50, 0).unwrap()
+            ),
+            course.get_longest_overlap()
+        );
+    }
 }
