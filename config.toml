@@ -1,32 +1,37 @@
 # Configuration file for sundial.
 
-# School period to schedule with. This is formatted as S YYYY where YYYY is the year and S is
-# is the season. S can be Spring, Summer, or Fall.
+school = "SDSU"
+# School period to schedule with. This is formatted as S YYYY where YYYY is the year and
+# S is the season. S can be Spring, Summer, or Fall.
 period = "Spring 2021"
 # The desired time to schedule around. This should ideally be the middle-most time.
 around_time = "1200"
 # Days to avoid. This is abbreviated to the first letter of the day.
-# M: Monday
-# T: Tuesday
-# W: Wednesday
+# M:  Monday
+# T:  Tuesday
+# W:  Wednesday
 # TH: Thursday
-# F: Friday
-bad_days = "THF"
+# F:  Friday
+bad_days = ["Thursday", "Friday"]
 # The earliest time a class can be.
 earliest_time = "1000"
 # The latest time a class can be.
 latest_time = "1700"
-# Courses to include by name in SUBJ-NUM format. Ex: CS-370, RWS-305W
-# Make sure to keep the spaces in the name. Ex: "A E" should stay the same.
-courses = [ "COMM-371", "CS-370", "CS-440", "CS-574", "RWS-305W" ]
+# Courses to include by name in SUBJ-NUM format. Ex: CS-370, RWS-305W Make sure to keep
+# the spaces in the name. Ex: "A E" should stay the same.
+courses = ["COMM-371", "CS-370", "CS-440", "CS-574", "RWS-305W"]
+#courses = ["COMM-371", "CS-370", "CS-440", "CS-574"]
 # True if a requested course isn't found in the schedule, false otherwise.
 skip_missing_courses = false
-# Courses to add by schedule number. If the course matching the schedule number is found above,
-# this schedule number will be ignored.
-include_courses = [ ]
+# Courses to add by schedule number. If the course matching the schedule number is found
+# above, this schedule number will be ignored.
+include_courses = []
 # Professors to include by last name.
-include_professors = [ "Bartoli" ]
+include_professors = ["Bartoli", "Boyd"]
+# True if you want every single professor above, false if you only want some. This
+# option only works if there is at least one name above.
+include_all_professors = false
 # Maximum time between the first and last class (minutes).
 maximum_time_distance = 600
-# True if waitlist is okay, false otherwise.
+# True if waitlist is not okay, false otherwise.
 prefer_no_waitlist = false
