@@ -2,11 +2,10 @@
 Sundial
 </h1>
 <h4 align="center">
-    A class scheduler for <a href="https://www.sdsu.edu/">San Diego State University</a>.
+    A universal class scheduler.
 </h4>
 
 <p align="center">
-    <!-- Rust Version -->
     <a href="https://www.rust-lang.org/tools/install">
         <img src="https://badgen.net/badge/rust/1.42+/?color=orange" alt="Rust Version" />
     </a>
@@ -19,24 +18,24 @@ Sundial
     <h4>
         <a href="#features">Features</a> |
         <a href="#installation">Installation</a> |
-        <a href="#troubleshooting">Troubleshooting</a>
+        <a href="#troubleshooting">Troubleshooting</a> |
+        <a href="#contributing">Contributing</a>
     </h4>
-</div>
-
-<div align="center">
-    <sub>Built with ❤ by <a href="https://github.com/gnuyent">Brandon N.</a>
-    </sub>
 </div>
 <br>
 
-Sundial is a class scheduler for San Diego State University. Sundial is feature built for speed
-and extensibility. It's quick, just like telling time.
+Sundial is a powerful class scheduler built for speed and extensibility. It's quick, just like telling time.
 
 ## Features
 * Generates parameterized class schedules.
+* Intelligent caching for fast, updated information.
+* RESTful API¹
+* Website and TUI access¹
+
+<small>¹ in development</small>
 
 ## Installation
-There are currently no automated builds for Rust.
+There are currently no automated builds.
 
 To run locally, make sure you have Rust and Cargo installed. Then, once inside the repository, configure the `config.toml` file and run:
 
@@ -46,10 +45,11 @@ To run locally, make sure you have Rust and Cargo installed. Then, once inside t
 sundial is a continuous work in progress. If you start facing problems, please submit an issue with as much relevant
 information (logs, screenshots, etc) as possible.
 
-## Contributing
-sundial is licensed under the GPL2 license. Pull requests are welcome.
+## License
+sundial is licensed under the [GPL2](LICENSE). Pull requests are welcome!
 
+## Disclaimer
 sundial does not guarantee that you meet all the prerequisites to take a class. Always consult an academic counselor
 before registering for classes.
 
-This project is not affiliated with or endorsed by San Diego State University in any way. Be responsible when using.
+This project is not affiliated with or endorsed by the supported universities in any way. Be responsible when using this program.

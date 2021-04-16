@@ -11,9 +11,10 @@ anyhow = "1.0"
 clap = "3.0.0-beta.2"
 itertools = "0.10"
 log = "0.4"
-reqwest = { version = "0.11", features = ["blocking"] }
+reqwest = { version = "0.11"}
 scraper = "0.12"
-serde = {version = "1.0", features = ["derive"]}
+serde = { version = "1.0", features = ["derive"] }
 simplelog = "^0.7"
 time = "0.2"
 toml = "0.4"
+tokio = { version = "1", features = ["full"] }
