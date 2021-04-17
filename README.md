@@ -29,10 +29,6 @@ Sundial is a powerful class scheduler built for speed and extensibility. It's qu
 ## Features
 * Generates parameterized class schedules.
 * Intelligent caching for fast, updated information.
-* RESTful API¹
-* Website and TUI access¹
-
-<small>¹ in development</small>
 
 ## Installation
 There are currently no automated builds.
