@@ -47,7 +47,7 @@ impl fmt::Display for Controller {
     Time.........: {}
     Seats........: {}/{}\n\n",
                     meeting.meeting_type,
-                    meeting.instructor.split(' ').nth(1).unwrap().to_uppercase(),
+                    meeting.instructor.to_uppercase(),
                     meeting_location,
                     meeting.days(),
                     meeting_time,

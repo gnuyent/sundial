@@ -11,6 +11,7 @@ pub struct Options {
     pub period_num: String,
     pub season: String,
     pub year: String,
+    pub skip_missing_courses: bool,
 }
 
 impl Options {
@@ -37,6 +38,7 @@ impl Options {
             period_num,
             season: season.to_owned(),
             year: year.to_owned(),
+            skip_missing_courses: params.skip_missing_courses,
         }
     }
 }

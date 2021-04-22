@@ -1,7 +1,7 @@
 use super::Options;
 use crate::scheduler::{Course, Meeting};
 use anyhow::{Context, Result};
-use scraper::{Html, Selector};
+use scraper::{ElementRef, Html, Selector};
 use std::collections::HashMap;
 
 /// Scraper for San Diego State University
@@ -54,7 +54,22 @@ impl SdsuSpider {
             let body = Html::parse_document(&body);
             let selector = Selector::parse(".sectionFieldCourse > a").unwrap();
 
-            for element in body.select(&selector) {
+            let body_selector: Vec<ElementRef> = body.select(&selector).collect();
+
+            if body_selector.len() == 0 {
+                let no_match = format!(
+                    "Unable to find courses matching {} in {}.",
+                    course, self.opts.period
+                );
+
+                if self.opts.skip_missing_courses {
+                    warn!("{}", no_match);
+                } else {
+                    panic!("{}", no_match);
+                }
+            }
+
+            for element in body_selector {
                 let full_url = format!(
                     "https://sunspot.sdsu.edu/schedule/{}",
                     element.value().attr("href").unwrap()
