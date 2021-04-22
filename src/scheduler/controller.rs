@@ -1,4 +1,5 @@
 use crate::scraper::{Options, SDSUSpider};
+use anyhow::Result;
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet};
 use std::iter::FromIterator;
@@ -51,7 +52,7 @@ impl Controller {
         }
     }
 
-    pub fn generate_schedules(&mut self) {
+    pub fn generate_schedules(&mut self) -> Result<()> {
         let schedules_raw = self
             .courses
             .values()
@@ -63,9 +64,8 @@ impl Controller {
         info!("Generated {} schedules.", schedules_raw.len());
 
         for schedule in schedules_raw {
-            let mut s = Schedule::new(schedule);
-            if s.is_valid() {
-                s.calculate_fitness(&self.parameters);
+            if let Some(s) = Schedule::new(schedule) {
+                s.calculate_fitness(&self.parameters)?;
                 self.schedules.push(s);
             }
         }
@@ -106,5 +106,7 @@ impl Controller {
         info!("Validated {} schedules.", self.schedules.len());
 
         self.schedules.sort_by(|s1, s2| s1.fitness.cmp(&s2.fitness));
+
+        Ok(())
     }
 }

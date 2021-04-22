@@ -39,9 +39,9 @@ fn main() {
     };
 
     let config: Config = ConfigBuilder::new().set_time_to_local(true).build();
-    TermLogger::init(level, config, TerminalMode::Mixed).unwrap();
+    TermLogger::init(level, config, TerminalMode::Mixed).expect("Unable to create logger.");
 
-    let params = scheduler::Parameters::new(&opts.config).unwrap();
+    let params = scheduler::Parameters::new(&opts.config).expect("Unable to parse configuration file.");
 
-    scheduler::Controller::new(params).generate_schedules();
+    scheduler::Controller::new(params).generate_schedules().expect("Unable to generate schedules.");
 }

@@ -1,6 +1,6 @@
 use super::Options;
 use crate::scheduler::{Course, Meeting};
-use anyhow::Result;
+use anyhow::{Context, Result};
 use scraper::{Html, Selector};
 use std::collections::HashMap;
 
@@ -99,8 +99,14 @@ impl SDSUSpider {
                 "Period" => item.period = self.opts.period.clone(),
                 "Course" => {
                     let mut split_course = content.splitn(2, "-");
-                    item.course_subject = split_course.next().unwrap().to_string();
-                    item.course_number = split_course.next().unwrap().to_string();
+                    item.course_subject = split_course
+                        .next()
+                        .context("Expected a valid course name.")?
+                        .to_string();
+                    item.course_number = split_course
+                        .next()
+                        .context("Expected a valid course name.")?
+                        .to_string();
                 }
                 "Section" => item.section = format!("{:0>3}", content),
                 "Schedule #" => item.schedule_num = content,
@@ -108,8 +114,14 @@ impl SDSUSpider {
                 "Session" => item.session = content,
                 "Seats" => {
                     let mut seats = content.splitn(2, "/");
-                    item.seats_available = seats.next().unwrap().to_string();
-                    item.seats_total = seats.next().unwrap().to_string();
+                    item.seats_available = seats
+                        .next()
+                        .context("Expected a valid seating structure.")?
+                        .to_string();
+                    item.seats_total = seats
+                        .next()
+                        .context("Expected a valid seating structure.")?
+                        .to_string();
                 }
                 "Full Title" => item.course_title = content,
                 "Description" => item.description = content,
@@ -143,7 +155,8 @@ impl SDSUSpider {
                 &types[idx],
                 &locations[idx],
                 &instructors[idx],
-            ).unwrap();
+            )
+            .unwrap();
             meetings.push(meeting);
         }
 

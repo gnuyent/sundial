@@ -1,7 +1,7 @@
 use super::date::{Date, Day};
-use super::Course;
-use super::Parameters;
-use std::collections::HashMap;
+use super::{Course, Meeting, Parameters};
+use anyhow::Result;
+use std::{cell::Cell, collections::HashMap};
 use time::Time;
 
 #[derive(Debug)]
@@ -9,17 +9,30 @@ pub struct Schedule {
     /// List of all courses within this schedule.
     pub courses: Vec<Course>,
     /// An integer representing how favorable this schedule is compared to all others.
-    pub fitness: i32,
+    pub fitness: Cell<i32>,
 }
 
 impl Schedule {
     /// Creates a new [Schedule] instance.
-    pub fn new(courses: Vec<&Course>) -> Self {
+    pub fn new(courses: Vec<&Course>) -> Option<Self> {
         let courses: Vec<Course> = courses.into_iter().cloned().collect();
-        Self {
-            courses,
-            fitness: 0,
+
+        if Schedule::is_valid(&courses) {
+            return Some(Self {
+                courses,
+                fitness: Cell::new(0),
+            });
         }
+
+        None
+    }
+
+    fn inc_fitness(&self) {
+        self.fitness.set(self.fitness.get() + 1);
+    }
+
+    fn dec_fitness(&self) {
+        self.fitness.set(self.fitness.get() + 1);
     }
 
     /// Determines if the current schedule has overlapping times. An overlapping time means that
@@ -29,10 +42,10 @@ impl Schedule {
     /// runs past a start. A class that occurs on Monday from 0900-1000 overlaps with a class from
     /// 1000-1100. Similarly, a class that occurs on Friday from 1200-1300 overlaps with a class
     /// from 1250-1350.
-    pub fn is_valid(&self) -> bool {
+    fn is_valid(courses: &Vec<Course>) -> bool {
         let mut times: Vec<Date> = Vec::new();
 
-        for course in &self.courses {
+        for course in courses {
             if course.overlaps() {
                 times.push(course.get_longest_overlap())
             } else {
@@ -71,18 +84,22 @@ impl Schedule {
     /// This method uses the given schedule parameters as inputs to calculate teh schedule's
     /// fitness.
     /// TODO: Consider using a bitfield for conditions.
-    pub fn calculate_fitness(&mut self, schedule_parameters: &Parameters) {
-        self.fitness = 0; // reset to avoid undefined behavior
+    pub fn calculate_fitness(&self, schedule_parameters: &Parameters) -> Result<()> {
+        self.fitness.set(0); // reset to avoid undefined behavior
         self.avoid_day(&schedule_parameters.bad_days);
-        self.earliest_time(&schedule_parameters.earliest_time);
-        self.latest_time(&schedule_parameters.latest_time);
+        self.early_late_times(
+            &schedule_parameters.earliest_time,
+            &schedule_parameters.latest_time,
+        )?;
         if schedule_parameters.prefer_no_waitlist {
             self.waitlist()
         }
+
+        Ok(())
     }
 
     /// Modifies the current schedule's fitness if it contains a day that the user wants avoided.
-    fn avoid_day(&mut self, bad_days: &Vec<String>) {
+    fn avoid_day(&self, bad_days: &Vec<String>) {
         let bad_days: Vec<Day> = bad_days.iter().map(|d| Day::match_day(d)).collect();
         let days: Vec<Day> = self
             .courses
@@ -91,60 +108,41 @@ impl Schedule {
             .collect();
         for bad_day in bad_days {
             match days.contains(&bad_day) {
-                true => self.fitness -= 1,
-                false => self.fitness += 1,
+                true => self.dec_fitness(),
+                false => self.inc_fitness(),
             };
         }
     }
 
     /// Modifies the current schedule's fitness by comparing each course's start time.
-    fn earliest_time(&mut self, comparison_time: &str) {
-        let (hour, minute) = comparison_time.split_at(2);
-        let comparison_time: Time = Time::try_from_hms(
-            hour.parse::<u8>().unwrap(),
-            minute.parse::<u8>().unwrap(),
-            0,
-        )
-        .unwrap();
-        let start_times: Vec<Time> = self
-            .courses
-            .iter()
-            .flat_map(|c| c.meetings.iter().map(|m| m.date.start_time))
-            .collect();
-        for start_time in start_times {
-            if start_time < comparison_time {
-                self.fitness -= 1;
-            }
-        }
-    }
+    fn early_late_times(&self, early_time: &str, late_time: &str) -> Result<()> {
+        let (hour, minute) = early_time.split_at(2);
+        let early_time: Time = Time::try_from_hms(hour.parse::<u8>()?, minute.parse::<u8>()?, 0)?;
 
-    /// Modifies the current schedule's fitness by comparing each course's end time.
-    fn latest_time(&mut self, comparison_time: &str) {
-        let (hour, minute) = comparison_time.split_at(2);
-        let comparison_time: Time = Time::try_from_hms(
-            hour.parse::<u8>().unwrap(),
-            minute.parse::<u8>().unwrap(),
-            0,
-        )
-        .unwrap();
-        let end_times: Vec<Time> = self
-            .courses
-            .iter()
-            .flat_map(|c| c.meetings.iter().map(|m| m.date.end_time))
-            .collect();
-        for end_time in end_times {
-            if end_time > comparison_time {
-                self.fitness -= 1;
-            }
-        }
+        let (hour, minute) = late_time.split_at(2);
+        let late_time: Time = Time::try_from_hms(hour.parse::<u8>()?, minute.parse::<u8>()?, 0)?;
+
+        self.courses.iter().for_each(|Course { meetings, .. }| {
+            meetings.iter().for_each(|Meeting { date, .. }| {
+                if date.start_time < early_time {
+                    self.dec_fitness();
+                }
+
+                if date.end_time > late_time {
+                    self.dec_fitness();
+                }
+            })
+        });
+
+        Ok(())
     }
 
     /// Modifies the current schedule's fitness depending on if it has a waitlist or not.
-    fn waitlist(&mut self) {
-        for course in self.courses.iter() {
+    fn waitlist(&self) {
+        for course in &self.courses {
             match course.waitlist {
-                true => self.fitness -= 1,
-                false => self.fitness += 1,
+                true => self.dec_fitness(),
+                false => self.inc_fitness(),
             }
         }
     }
