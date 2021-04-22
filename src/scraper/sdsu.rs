@@ -5,17 +5,18 @@ use scraper::{Html, Selector};
 use std::collections::HashMap;
 
 /// Scraper for San Diego State University
-pub struct SDSUSpider {
+pub struct SdsuSpider {
     opts: Options,
     base_url: String,
 }
 
-impl SDSUSpider {
+impl SdsuSpider {
     pub fn new(opts: Options) -> Self {
         let base_url = String::from("https://sunspot.sdsu.edu/schedule/search?mode=search");
         Self { opts, base_url }
     }
 
+    // FIXME: Add skip_missing_courses
     pub fn parse(&self) -> Result<HashMap<String, Vec<Course>>> {
         let runtime = tokio::runtime::Runtime::new().expect("unable to create a runtime.");
         let client = reqwest::Client::new();
@@ -41,7 +42,7 @@ impl SDSUSpider {
         let mut course_urls: Vec<String> = Vec::new();
 
         for course in self.opts.courses.iter() {
-            let mut t = course.splitn(2, "-");
+            let mut t = course.splitn(2, '-');
             let subject = t.next().unwrap();
             let number = t.next().unwrap();
             let url = format!(
@@ -74,7 +75,6 @@ impl SDSUSpider {
         let body = Html::parse_document(&body);
 
         let mut item = Course::default();
-        item.miscellaneous = HashMap::new();
         let mut course_details: HashMap<String, String> = HashMap::new();
 
         for tr in body.select(&Selector::parse("tr").unwrap()) {
@@ -98,7 +98,7 @@ impl SDSUSpider {
             match label.as_ref() {
                 "Period" => item.period = self.opts.period.clone(),
                 "Course" => {
-                    let mut split_course = content.splitn(2, "-");
+                    let mut split_course = content.splitn(2, '-');
                     item.course_subject = split_course
                         .next()
                         .context("Expected a valid course name.")?
@@ -113,7 +113,7 @@ impl SDSUSpider {
                 "Units" => item.units = content,
                 "Session" => item.session = content,
                 "Seats" => {
-                    let mut seats = content.splitn(2, "/");
+                    let mut seats = content.splitn(2, '/');
                     item.seats_available = seats
                         .next()
                         .context("Expected a valid seating structure.")?
@@ -126,7 +126,7 @@ impl SDSUSpider {
                 "Full Title" => item.course_title = content,
                 "Description" => item.description = content,
                 "Prerequisite" => item.prerequisite = content,
-                "Meetings" => item.meetings = SDSUSpider::parse_meetings(&body),
+                "Meetings" => item.meetings = SdsuSpider::parse_meetings(&body),
                 _ => {
                     let mut key = label.clone();
                     key.make_ascii_lowercase();
@@ -136,15 +136,16 @@ impl SDSUSpider {
             }
         }
 
+        item.url = url.to_string();
         Ok(item)
     }
 
     fn parse_meetings(body: &Html) -> Vec<Meeting> {
-        let types = SDSUSpider::div_to_vec(body, ".sectionFieldType");
-        let times = SDSUSpider::div_to_vec(body, ".sectionFieldTime");
-        let days = SDSUSpider::div_to_vec(body, ".sectionFieldDay");
-        let locations = SDSUSpider::div_to_vec(body, ".sectionFieldLocation");
-        let instructors = SDSUSpider::div_to_vec(body, ".sectionFieldInstructor");
+        let types = SdsuSpider::div_to_vec(body, ".sectionFieldType");
+        let times = SdsuSpider::div_to_vec(body, ".sectionFieldTime");
+        let days = SdsuSpider::div_to_vec(body, ".sectionFieldDay");
+        let locations = SdsuSpider::div_to_vec(body, ".sectionFieldLocation");
+        let instructors = SdsuSpider::div_to_vec(body, ".sectionFieldInstructor");
 
         let mut meetings: Vec<Meeting> = Vec::new();
 

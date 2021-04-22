@@ -14,18 +14,21 @@ pub enum Day {
 impl Day {
     pub fn match_day(day: &str) -> Day {
         match day {
-            "M" => Day::Monday,
-            "T" => Day::Tuesday,
-            "W" => Day::Wednesday,
-            "H" | "TH" => Day::Thursday,
-            "F" => Day::Friday,
+            "M" | "Monday" => Day::Monday,
+            "T" | "Tuesday" => Day::Tuesday,
+            "W" | "Wednesday" => Day::Wednesday,
+            "H" | "TH" | "Thursday" => Day::Thursday,
+            "F" | "Friday" => Day::Friday,
             "" | "Online" | "ON-LINE" => Day::Online,
-            _ => Day::Unknown,
+            _ => {
+                warn!("Unable to determine meeting day from {}.", day);
+                Day::Unknown
+            }
         }
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, Hash)]
+#[derive(Clone, Copy, Debug, Eq)]
 pub struct Date {
     pub start_time: time::Time,
     pub end_time: time::Time,

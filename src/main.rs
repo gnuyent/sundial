@@ -35,7 +35,7 @@ fn main() {
         0 => LevelFilter::Off,
         1 => LevelFilter::Error,
         2 => LevelFilter::Warn,
-        3 | _ => LevelFilter::Info,
+        _ => LevelFilter::Info,
     };
 
     let config: Config = ConfigBuilder::new().set_time_to_local(true).build();
@@ -43,5 +43,7 @@ fn main() {
 
     let params = scheduler::Parameters::new(&opts.config).expect("Unable to parse configuration file.");
 
-    scheduler::Controller::new(params).generate_schedules().expect("Unable to generate schedules.");
+    let mut c = scheduler::Controller::new(params);
+    c.generate_schedules().expect("Unable to generate schedules.");
+    println!("{}", c);
 }

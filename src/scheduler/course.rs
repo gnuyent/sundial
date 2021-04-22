@@ -1,8 +1,6 @@
-use super::date::Date;
 use super::meeting::Meeting;
 use std::collections::HashMap;
 use std::fmt;
-use time::Time;
 
 /// A data structure holding course informatino which matches the corresponding database table.
 #[derive(Clone, Debug, Default)]
@@ -42,40 +40,44 @@ impl fmt::Display for Course {
 }
 
 impl Course {
-    pub fn overlaps(&self) -> bool {
-        let starts = self
-            .meetings
-            .iter()
-            .map(|x| x.date.start_time)
-            .collect::<Vec<Time>>();
+    // pub fn overlaps(&self) -> bool {
+    //     let starts = self
+    //         .meetings
+    //         .iter()
+    //         .flat_map(|m| m.dates.iter().map(|d| d.start_time))
+    //         .collect::<Vec<Time>>();
 
-        // Create a 'set' from starts
-        let mut uniq = starts.to_owned();
-        uniq.sort_unstable();
-        uniq.dedup();
+    //     // Create a 'set' from starts
+    //     let mut uniq = starts.to_owned();
+    //     uniq.sort_unstable();
+    //     uniq.dedup();
 
-        if starts.iter().count() != uniq.iter().count() {
-            return true;
-        }
+    //     if starts.iter().count() != uniq.iter().count() {
+    //         return true;
+    //     }
 
-        false
-    }
+    //     false
+    // }
 
-    pub fn get_longest_overlap(&self) -> Date {
-        let times: Vec<Date> = self.meetings.iter().map(|x| x.date).collect::<Vec<Date>>();
+    // pub fn get_longest_overlap(&self) -> Date {
+    //     let times: Vec<Date> = self
+    //         .meetings
+    //         .iter()
+    //         .flat_map(|x| x.dates.iter().map(|d| d.clone()))
+    //         .collect::<Vec<Date>>();
 
-        let mut highest_idx = 0;
-        let mut highest_diff = 0;
+    //     let mut highest_idx = 0;
+    //     let mut highest_diff = 0;
 
-        for (idx, meeting) in times.iter().enumerate() {
-            let start = meeting.start_time;
-            let end = meeting.end_time;
-            let difference = (end - start).whole_seconds();
-            if difference > highest_diff {
-                highest_diff = difference;
-                highest_idx = idx;
-            }
-        }
-        self.meetings[highest_idx].date
-    }
+    //     for (idx, meeting) in times.iter().enumerate() {
+    //         let start = meeting.start_time;
+    //         let end = meeting.end_time;
+    //         let difference = (end - start).whole_seconds();
+    //         if difference > highest_diff {
+    //             highest_diff = difference;
+    //             highest_idx = idx;
+    //         }
+    //     }
+    //     self.meetings[highest_idx].date
+    // }
 }

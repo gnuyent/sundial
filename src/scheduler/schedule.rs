@@ -42,15 +42,16 @@ impl Schedule {
     /// runs past a start. A class that occurs on Monday from 0900-1000 overlaps with a class from
     /// 1000-1100. Similarly, a class that occurs on Friday from 1200-1300 overlaps with a class
     /// from 1250-1350.
-    fn is_valid(courses: &Vec<Course>) -> bool {
-        let mut times: Vec<Date> = Vec::new();
+    fn is_valid(courses: &[Course]) -> bool {
+        let mut times: Vec<&Date> = Vec::new();
 
         for course in courses {
-            if course.overlaps() {
-                times.push(course.get_longest_overlap())
-            } else {
-                for meeting in &course.meetings {
-                    times.push(meeting.date)
+            // if course.overlaps() {
+            //     times.push(course.get_longest_overlap())
+            // } else {
+            for meeting in &course.meetings {
+                for date in &meeting.dates {
+                    times.push(date);
                 }
             }
         }
@@ -61,7 +62,7 @@ impl Schedule {
             if let Some(v) = week.get_mut(&date.day) {
                 v.push(date);
             } else {
-                week.insert(date.day.clone(), vec![date]);
+                week.insert(date.day, vec![date]);
             }
         }
 
@@ -99,13 +100,18 @@ impl Schedule {
     }
 
     /// Modifies the current schedule's fitness if it contains a day that the user wants avoided.
-    fn avoid_day(&self, bad_days: &Vec<String>) {
+    fn avoid_day(&self, bad_days: &[String]) {
         let bad_days: Vec<Day> = bad_days.iter().map(|d| Day::match_day(d)).collect();
         let days: Vec<Day> = self
             .courses
             .iter()
-            .flat_map(|course| course.meetings.iter().map(|m| m.date.day))
+            .flat_map(|c| {
+                c.meetings
+                    .iter()
+                    .flat_map(|m| m.dates.iter().map(|d| d.day))
+            })
             .collect();
+
         for bad_day in bad_days {
             match days.contains(&bad_day) {
                 true => self.dec_fitness(),
@@ -123,14 +129,16 @@ impl Schedule {
         let late_time: Time = Time::try_from_hms(hour.parse::<u8>()?, minute.parse::<u8>()?, 0)?;
 
         self.courses.iter().for_each(|Course { meetings, .. }| {
-            meetings.iter().for_each(|Meeting { date, .. }| {
-                if date.start_time < early_time {
-                    self.dec_fitness();
-                }
+            meetings.iter().for_each(|Meeting { dates, .. }| {
+                dates.iter().for_each(|d| {
+                    if d.start_time < early_time {
+                        self.dec_fitness();
+                    }
 
-                if date.end_time > late_time {
-                    self.dec_fitness();
-                }
+                    if d.end_time > late_time {
+                        self.dec_fitness();
+                    }
+                })
             })
         });
 

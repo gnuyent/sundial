@@ -1,5 +1,5 @@
 mod sdsu;
-pub use crate::scraper::sdsu::SDSUSpider;
+pub use crate::scraper::sdsu::SdsuSpider;
 
 //trait Parser {
 //    fn parse(&self) -> Result<Vec<Course>>;
@@ -17,7 +17,7 @@ impl Options {
     pub fn from_params(params: &crate::scheduler::Parameters) -> Self {
         let period = params.period.to_owned();
         let p = period.clone();
-        let mut p = p.split(" ");
+        let mut p = p.split(' ');
         let season = p.next().unwrap();
         let year = p.next().unwrap();
         let period_num = format!(
