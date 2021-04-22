@@ -34,6 +34,11 @@ impl fmt::Display for Controller {
                     ),
                 };
 
+                let meeting_location: String = match meeting.location.as_ref() {
+                    "ON-LINE" => String::from("Online"),
+                    _ => meeting.location.clone(),
+                };
+
                 out_str.push_str(&format!(
                     "    Meeting Type.: {}
     Instructor...: {}
@@ -42,8 +47,8 @@ impl fmt::Display for Controller {
     Time.........: {}
     Seats........: {}/{}\n\n",
                     meeting.meeting_type,
-                    meeting.instructor,
-                    meeting.location,
+                    meeting.instructor.split(' ').nth(1).unwrap().to_uppercase(),
+                    meeting_location,
                     meeting.days(),
                     meeting_time,
                     course.seats_available,
