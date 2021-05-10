@@ -119,7 +119,7 @@ impl Controller {
                             .clone()
                             .split_whitespace()
                             .nth(1)
-                            .unwrap()
+                            .unwrap_or("NO INSTRUCTOR")
                             .to_uppercase()
                     })
                     .collect::<HashSet<String>>()
@@ -133,6 +133,10 @@ impl Controller {
         }
 
         info!("Validated {} schedules.", self.schedules.len());
+        if self.schedules.len() == 0 {
+            info!("Unable to generate any valid schedules. Exiting.");
+            std::process::exit(1);
+        }
 
         self.schedules.sort_by(|s1, s2| s1.fitness.cmp(&s2.fitness));
 
